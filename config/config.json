@@ -1,0 +1,24 @@
+{
+  "api": {
+    "infos": {
+      "title": "Core",
+      "version": "{{VERSION}}",
+      "description": "Core features",
+      "contactEmail": "florian.charpentier67@gmail.com",
+      "license": "WTFPL",
+      "licenseUrl": "http://wtfpl.net"
+    },
+    "server": {
+      "host": "0.0.0.0",
+      "port": "8080",
+      "readTimeout": "15",
+      "writeTimeout": "15",
+      "idleTimeout": "60"
+    }
+  },
+  "notification": {
+    "bot": {
+      "webhookSecretTokenKey": "BOT_WEBHOOK"
+    }
+  }
+}
