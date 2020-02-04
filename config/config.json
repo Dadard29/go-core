@@ -18,7 +18,18 @@
   },
   "notification": {
     "bot": {
-      "webhookSecretTokenKey": "BOT_WEBHOOK"
+      "webhookSecretKey": "BOT_WEBHOOK"
+    }
+  },
+  "connectors": {
+    "telegram": {
+      "botTokenKey": "BOT_TOKEN",
+      "apiUrlSendMessage": "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s&parse_mode=%s",
+      "parseModeMarkdown": "Markdown",
+      "parseModeHTML": "HTML",
+      "monitoringChatId": "-393259181",
+      "continuousIntegrationChatId": "-325844941",
+      "privateChatId": "518425658"
     }
   }
 }

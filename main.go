@@ -11,7 +11,7 @@ import (
 //var routes = map[string]func(w http.ResponseWriter, r *http.Request) {
 var routes = service.RouteMapping{
 	Mapping: map[string]service.Route{
-		"/notification/bot/webhook": {Handler: controllers.NotificationBotWebookRoute, Method:  http.MethodGet},
+		"/notification/bot/webhook": {Handler: controllers.NotificationBotWebookRoute, Method:  http.MethodPost},
 	},
 }
 
