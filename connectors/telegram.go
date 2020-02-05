@@ -8,7 +8,7 @@ import (
 	"github.com/Dadard29/go-core/config"
 	"io/ioutil"
 	"net/http"
-	"strconv"
+	"net/url"
 )
 
 type SendMessageResponseError struct {
@@ -47,7 +47,10 @@ func NewTelegramConnector() (*TelegramConnector, error) {
 }
 
 func (c *TelegramConnector) SendMessage(message string, chatId string, parseMode string) error {
-	urlFormat := fmt.Sprintf(c.apiUrlSendMessage, c.botToken, chatId, message, parseMode)
+	// message MUST NOT BE url encoded, as it is encoded in the function
+
+	messageUrlencoded := url.QueryEscape(message)
+	urlFormat := fmt.Sprintf(c.apiUrlSendMessage, c.botToken, chatId, messageUrlencoded, parseMode)
 
 	req, err := http.NewRequest(http.MethodGet, urlFormat, nil)
 	if err != nil {
@@ -59,7 +62,8 @@ func (c *TelegramConnector) SendMessage(message string, chatId string, parseMode
 		return err
 	}
 
-	if resp.Status != strconv.Itoa(http.StatusOK) {
+	if resp.StatusCode != http.StatusOK {
+		fmt.Printf("%+v\n", resp)
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return err

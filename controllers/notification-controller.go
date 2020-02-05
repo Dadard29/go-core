@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"github.com/Dadard29/go-api-utils/API"
 	"github.com/Dadard29/go-core/api"
 	"github.com/Dadard29/go-core/config"
@@ -22,6 +23,9 @@ func NotificationBotWebookRoute(w http.ResponseWriter, r *http.Request) {
 
 	logger.CheckErr(err)
 	webhookToken := api.Api.Config.GetEnv(keyWebhookToken)
+	if webhookToken == "" {
+		logger.CheckErrFatal(errors.New("no configured bot webhook secret"))
+	}
 
 	if secretToken != webhookToken {
 		err := API.BuildErrorResponse(http.StatusUnauthorized, "wrong webhook token", w)

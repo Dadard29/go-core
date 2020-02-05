@@ -10,7 +10,7 @@ import (
 
 func NotificationBotWebookRepository(webhook models.GitlabWebhookPipeline) (bool, string) {
 	telegram, err := connectors.NewTelegramConnector()
-	logger.CheckErr(err)
+	logger.CheckErrFatal(err)
 
 	projectName := webhook.Project.Name
 	projectUrl := webhook.Project.WebURL
