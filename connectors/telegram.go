@@ -63,7 +63,7 @@ func (c *TelegramConnector) SendMessage(message string, chatId string, parseMode
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		fmt.Printf("%+v\n", resp)
+		fmt.Printf("%s\n", urlFormat)
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return err
