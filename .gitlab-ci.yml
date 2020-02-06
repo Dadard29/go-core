@@ -1,6 +1,7 @@
 image: docker:stable
 stages:
   - build
+  - deploy
 
 services:
   - docker:dind
@@ -15,3 +16,15 @@ build-and-test:
     - docker build -t $IMAGE_NAME --build-arg ARG_BOT_WEBHOOK=$ARG_BOT_WEBHOOK --build-arg ARG_BOT_TOKEN=$ARG_BOT_TOKEN .
     - docker run --rm $IMAGE_NAME go test -v ./...
     - docker push $IMAGE_NAME
+
+deploy:
+  stage: deploy
+  script:
+    - apk add --update curl wget
+    - echo "deploying container $CONTAINER_NAME ($IMAGE_NAME) with API $DEPLOYER_URL, $DEPLOYER_TOKEN"
+    - export $CONTAINER_NAME
+    - export $IMAGE_NAME
+    - export $DEPLOYER_URL
+    - export $DEPLOYER_TOKEN
+    - wget http://git.dadard.fr/dadard/scripts/raw/branch/master/deploy.sh
+    - sh deploy.sh
