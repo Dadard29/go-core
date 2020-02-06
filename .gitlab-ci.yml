@@ -22,9 +22,9 @@ deploy:
   script:
     - apk add --update curl wget
     - echo "deploying container $CONTAINER_NAME ($IMAGE_NAME) with API $DEPLOYER_URL, $DEPLOYER_TOKEN"
-    - export $CONTAINER_NAME
-    - export $IMAGE_NAME
-    - export $DEPLOYER_URL
-    - export $DEPLOYER_TOKEN
+    - export CONTAINER_NAME
+    - export IMAGE_NAME
+    - export DEPLOYER_URL
+    - export DEPLOYER_TOKEN
     - wget http://git.dadard.fr/dadard/scripts/raw/branch/master/deploy.sh
     - sh deploy.sh
