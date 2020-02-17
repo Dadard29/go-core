@@ -2,6 +2,7 @@ image: docker:stable
 stages:
   - build
   - deploy
+  - update_proxy
 
 services:
   - docker:dind
@@ -21,10 +22,23 @@ deploy:
   stage: deploy
   script:
     - apk add --update curl wget
-    - echo "deploying container $CONTAINER_NAME ($IMAGE_NAME) with API $DEPLOYER_URL, $DEPLOYER_TOKEN"
+    - wget http://git.dadard.fr/dadard/scripts/raw/branch/master/deploy.sh
     - export CONTAINER_NAME
     - export IMAGE_NAME
     - export DEPLOYER_URL
     - export DEPLOYER_TOKEN
-    - wget http://git.dadard.fr/dadard/scripts/raw/branch/master/deploy.sh
+    - echo "deploying container $CONTAINER_NAME ($IMAGE_NAME) with API $DEPLOYER_URL, $DEPLOYER_TOKEN"
     - sh deploy.sh
+
+proxy:
+  stage: update_proxy
+  script:
+    - apk add --update curl wget
+    - wget http://git.dadard.fr/dadard/scripts/raw/branch/master/proxy_update.sh
+    - export CONTAINER_NAME
+    - export CONTAINER_HOST
+    - export CONTAINER_PORT
+    - export PROXY_URL
+    - export PROXY_TOKEN
+    - echo "update DNS for container $CONTAINER_NAME ($IMAGE_NAME) with hostname $CONTAINER_HOST ($PROXY_URL, $PROXY_TOKEN)"
+    - sh proxy_update.sh
