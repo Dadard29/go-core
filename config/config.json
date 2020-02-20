@@ -14,6 +14,18 @@
       "readTimeout": "15",
       "writeTimeout": "15",
       "idleTimeout": "60"
+    },
+    "db": {
+      "usernameKey": "USERNAME_DB",
+      "passwordKey": "PASSWORD_DB",
+      "database": "core",
+      "host": "localhost",
+      "port": "3306"
+    }
+  },
+  "profile": {
+    "jwt": {
+      "secretKey": "JWT_SECRET"
     }
   },
   "notification": {
