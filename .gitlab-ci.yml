@@ -14,7 +14,7 @@ build-and-test:
     - ls -l
     - echo "registering with $REGISTRY_USERNAME $REGISTRY_PASSWORD"
     - echo $REGISTRY_PASSWORD | docker login -u $REGISTRY_USERNAME --password-stdin registry.gitlab.com
-    - docker build -t $IMAGE_NAME --build-arg ARG_BOT_WEBHOOK=$ARG_BOT_WEBHOOK --build-arg ARG_BOT_TOKEN=$ARG_BOT_TOKEN .
+    - docker build -t $IMAGE_NAME --build-arg ARG_BOT_WEBHOOK=$ARG_BOT_WEBHOOK --build-arg ARG_BOT_TOKEN=$ARG_BOT_TOKEN --build-arg ARG_USERNAME_DB=$ARG_USERNAME_DB --build-arg ARG_PASSWORD_DB=$ARG_PASSWORD_DB .
     - docker run --rm $IMAGE_NAME go test -v ./...
     - docker push $IMAGE_NAME
 
@@ -25,9 +25,10 @@ deploy:
     - wget http://git.dadard.fr/dadard/scripts/raw/branch/master/deploy.sh
     - export CONTAINER_NAME
     - export IMAGE_NAME
+    - export POD_NAME
     - export DEPLOYER_URL
     - export DEPLOYER_TOKEN
-    - echo "deploying container $CONTAINER_NAME ($IMAGE_NAME) with API $DEPLOYER_URL, $DEPLOYER_TOKEN"
+    - echo "deploying container $CONTAINER_NAME ($IMAGE_NAME) with API $DEPLOYER_URL, $DEPLOYER_TOKEN in pod $POD_NAME"
     - sh deploy.sh
 
 proxy:
