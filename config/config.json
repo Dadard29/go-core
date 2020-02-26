@@ -2,7 +2,6 @@
   "api": {
     "infos": {
       "title": "Core",
-      "version": "{{VERSION}}",
       "description": "Core features",
       "contactEmail": "florian.charpentier67@gmail.com",
       "license": "WTFPL",
