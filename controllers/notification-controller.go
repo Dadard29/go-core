@@ -9,8 +9,11 @@ import (
 	"net/http"
 )
 
-// secret token in header X-Gitlab-Token (set from the gitlab webapp)
-// https://gitlab.com/help/user/project/integrations/webhooks
+
+// POST
+// Authorization: 	header X-Gitlab-Token (set from gitlab webapp)
+// Params: 			None
+// Body:			https://gitlab.com/help/user/project/integrations/webhooks (pipeline object)
 func NotificationBotWebookRoute(w http.ResponseWriter, r *http.Request) {
 	var err error
 

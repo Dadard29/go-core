@@ -22,6 +22,10 @@ func ProfileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// POST
+// Authorization: 	Basic
+// Params: 			None
+// Body: 			None
 func ProfileSignUp(w http.ResponseWriter, r *http.Request) {
 	username, password, err := auth.ParseBasicAuth(r)
 	if err != nil {
@@ -42,6 +46,10 @@ func ProfileSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// GET
+// Authorization: 	Basic
+// Params: 			None
+// Body: 			None
 func ProfileGet(w http.ResponseWriter, r *http.Request) {
 	username, password, err := auth.ParseBasicAuth(r)
 	if err != nil {
@@ -66,6 +74,10 @@ func ProfileGet(w http.ResponseWriter, r *http.Request) {
 	logger.CheckErr(err)
 }
 
+// PUT
+// Authorization: 	Basic
+// Params: 			None
+// Body: 			None
 func ProfileChangePassword(w http.ResponseWriter, r *http.Request) {
 	username, password, err := auth.ParseBasicAuth(r)
 	if err != nil {
@@ -97,6 +109,10 @@ func ProfileChangePassword(w http.ResponseWriter, r *http.Request) {
 	logger.CheckErr(err)
 }
 
+// DELETE
+// Authorization: 	Basic
+// Params: 			None
+// Body: 			None
 func ProfileDelete(w http.ResponseWriter, r *http.Request) {
 	username, password, err := auth.ParseBasicAuth(r)
 	if err != nil {

@@ -37,6 +37,10 @@ func getJwtSecret() string {
 	return secret
 }
 
+// POST
+// Authorization: 	Basic
+// Params: 			None
+// Body: 			None
 func JwtCreate(w http.ResponseWriter, r *http.Request) {
 	var err error
 
@@ -91,6 +95,10 @@ func JwtCreate(w http.ResponseWriter, r *http.Request) {
 	logger.CheckErr(err)
 }
 
+// GET
+// Authorization: 	None
+// Params: 			None
+// Body: 			{"JwtCiphered": "..."}
 func JwtValidate(w http.ResponseWriter, r *http.Request) {
 	var body models.JwtValidate
 	if err := API.ParseJsonBody(r, &body); err != nil || body.JwtCiphered == "" {
