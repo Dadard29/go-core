@@ -67,9 +67,9 @@ func ProfileGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = API.BuildJsonResponse(true, message, models.ProfileJson{
-		ProfileKey:      profile.ProfileKey,
-		Username:        profile.Username,
-		DateCreated:     profile.DateCreated,
+		ProfileKey:  profile.ProfileKey,
+		Username:    profile.Username,
+		DateCreated: profile.DateCreated,
 	}, w)
 	logger.CheckErr(err)
 }
@@ -102,9 +102,9 @@ func ProfileChangePassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = API.BuildJsonResponse(true, message, models.ProfileJson{
-		ProfileKey:      profile.ProfileKey,
-		Username:        profile.Username,
-		DateCreated:     profile.DateCreated,
+		ProfileKey:  profile.ProfileKey,
+		Username:    profile.Username,
+		DateCreated: profile.DateCreated,
 	}, w)
 	logger.CheckErr(err)
 }

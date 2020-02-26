@@ -9,7 +9,7 @@ import (
 
 func ProfileExists(p models.Profile) bool {
 	var profileDb models.Profile
-	api.Api.Database.Orm.Where(&models.Profile{Username:p.Username}).Find(&profileDb)
+	api.Api.Database.Orm.Where(&models.Profile{Username: p.Username}).Find(&profileDb)
 	return profileDb.Username == p.Username
 }
 
@@ -17,7 +17,7 @@ func ProfileGetFromUsername(username string) (models.Profile, string, error) {
 	var p models.Profile
 	api.Api.Database.Orm.Where(&models.Profile{Username: username}).First(&p)
 
-	if ! ProfileExists(p) {
+	if !ProfileExists(p) {
 		msg := fmt.Sprintf("no profile with username %s found", username)
 		return p, msg, errors.New(msg)
 	}
@@ -33,7 +33,7 @@ func ProfileCreate(p models.Profile) (models.Profile, string, error) {
 
 	api.Api.Database.Orm.Create(&p)
 
-	if ! ProfileExists(p) {
+	if !ProfileExists(p) {
 		message := "error creating profile"
 		return models.Profile{}, message, errors.New(message)
 	}
@@ -42,7 +42,7 @@ func ProfileCreate(p models.Profile) (models.Profile, string, error) {
 }
 
 func ProfileUpdate(p models.Profile) (models.Profile, string, error) {
-	if ! ProfileExists(p) {
+	if !ProfileExists(p) {
 		msg := fmt.Sprintf("no profile with username %s found", p.Username)
 		return models.Profile{}, msg, errors.New(msg)
 	}
@@ -53,7 +53,7 @@ func ProfileUpdate(p models.Profile) (models.Profile, string, error) {
 }
 
 func ProfileDelete(p models.Profile) (models.Profile, string, error) {
-	if ! ProfileExists(p) {
+	if !ProfileExists(p) {
 		msg := fmt.Sprintf("no profile with username %s found", p.Username)
 		return models.Profile{}, msg, errors.New(msg)
 	}

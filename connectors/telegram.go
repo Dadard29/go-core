@@ -12,14 +12,14 @@ import (
 )
 
 type SendMessageResponseError struct {
-	Ok bool `json:"ok"`
+	Ok          bool   `json:"ok"`
 	Description string `json:"description"`
 }
 
 type TelegramConnector struct {
-	botToken string
+	botToken          string
 	apiUrlSendMessage string
-	httpClient *http.Client
+	httpClient        *http.Client
 }
 
 func NewTelegramConnector() (*TelegramConnector, error) {
@@ -40,9 +40,9 @@ func NewTelegramConnector() (*TelegramConnector, error) {
 	apiUrlSendMessage := telegramConfig[config.ConnectorsTelegramApiUrlSendMessage]
 
 	return &TelegramConnector{
-		botToken: botTokenValue,
+		botToken:          botTokenValue,
 		apiUrlSendMessage: apiUrlSendMessage,
-		httpClient: &http.Client{},
+		httpClient:        &http.Client{},
 	}, nil
 }
 

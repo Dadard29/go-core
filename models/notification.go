@@ -3,7 +3,6 @@ package models
 import "time"
 
 type GitlabWebhookPipeline struct {
-
 	ObjectKind       string `json:"object_kind"`
 	ObjectAttributes struct {
 		ID         int      `json:"id"`

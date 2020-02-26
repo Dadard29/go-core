@@ -15,19 +15,18 @@ var routes = service.RouteMapping{
 	Mapping: map[string]service.Route{
 		"/notification/bot/webhook": {
 			Handler: controllers.NotificationBotWebookRoute,
-			Method: []string{http.MethodPost},
+			Method:  []string{http.MethodPost},
 		},
 		"/profile/auth/jwt": {
 			Handler: controllers.JwtHandler,
-			Method: []string{http.MethodGet, http.MethodPost},
+			Method:  []string{http.MethodGet, http.MethodPost},
 		},
 		"/profile/auth": {
 			Handler: controllers.ProfileHandler,
-			Method: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
+			Method:  []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
 		},
 	},
 }
-
 
 func main() {
 
@@ -35,7 +34,7 @@ func main() {
 
 	dbConfig, err := Api.Config.GetSubcategoryFromFile("api", "db")
 	Api.Logger.CheckErr(err)
-	Api.Database = database.NewConnector(dbConfig, true ,[]interface{} {
+	Api.Database = database.NewConnector(dbConfig, true, []interface{}{
 		models.Profile{},
 		models.Api{},
 		models.Subscription{},

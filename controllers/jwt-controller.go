@@ -111,7 +111,7 @@ func JwtValidate(w http.ResponseWriter, r *http.Request) {
 	jwtDeciphered, err := auth.DecipherJwtWithJwe(config.PrivateKeyFile, []byte(jwtCiphered))
 	if err != nil {
 		logger.Error(err.Error())
-		err := API.BuildErrorResponse(http.StatusInternalServerError,"error deciphering token", w)
+		err := API.BuildErrorResponse(http.StatusInternalServerError, "error deciphering token", w)
 		logger.CheckErr(err)
 		return
 	}
@@ -120,7 +120,7 @@ func JwtValidate(w http.ResponseWriter, r *http.Request) {
 	_, err = auth.VerifyJwtHS256(jwtDeciphered, secret)
 	if err != nil {
 		logger.Error(err.Error())
-		err := API.BuildErrorResponse(http.StatusBadRequest,"token invalid", w)
+		err := API.BuildErrorResponse(http.StatusBadRequest, "token invalid", w)
 		logger.CheckErr(err)
 		return
 	}

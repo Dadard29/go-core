@@ -9,7 +9,6 @@ import (
 	"net/http"
 )
 
-
 // POST
 // Authorization: 	header X-Gitlab-Token (set from gitlab webapp)
 // Params: 			None
@@ -45,4 +44,3 @@ func NotificationBotWebookRoute(w http.ResponseWriter, r *http.Request) {
 
 	logger.CheckErr(err)
 }
-

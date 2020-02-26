@@ -15,7 +15,7 @@ func ProfileManagerSignIn(username string, password string) (models.Profile, str
 		return p, message, err
 	}
 
-	if ! models.ComparePassword(password, profileDb.PasswordEncrypt) {
+	if !models.ComparePassword(password, profileDb.PasswordEncrypt) {
 		message := "bad password"
 		return models.Profile{}, message, errors.New(message)
 	}
@@ -46,7 +46,7 @@ func ProfileManagerChangePassword(username string, password string, newPassword 
 	}
 
 	// check auth
-	if ! models.ComparePassword(password, p.PasswordEncrypt) {
+	if !models.ComparePassword(password, p.PasswordEncrypt) {
 		message := "bad password"
 		return models.Profile{}, message, errors.New(message)
 	}
@@ -74,7 +74,7 @@ func ProfileManagerDelete(username string, password string) (models.Profile, str
 	}
 
 	// check auth
-	if ! models.ComparePassword(password, p.PasswordEncrypt) {
+	if !models.ComparePassword(password, p.PasswordEncrypt) {
 		message := "bad password"
 		return models.Profile{}, message, errors.New(message)
 	}

@@ -11,26 +11,25 @@ const (
 )
 
 const (
-	Notification = "notification"
-	NotificationBot = "bot"
+	Notification                    = "notification"
+	NotificationBot                 = "bot"
 	NotificationBotWebhookSecretKey = "webhookSecretKey"
 )
 
 const (
-	Profile = "profile"
-	ProfileJwt = "jwt"
+	Profile             = "profile"
+	ProfileJwt          = "jwt"
 	ProfileJwtSecretKey = "secretKey"
 )
 
 const (
-	Connectors         = "connectors"
-	ConnectorsTelegram = "telegram"
-	ConnectorsTelegramBotTokenKey = "botTokenKey"
-	ConnectorsTelegramApiUrlSendMessage = "apiUrlSendMessage"
-	ConnectorsTelegramParseModeMarkdown = "parseModeMarkdown"
-	ConnectorsTelegramParseModeHTML = "parseModeHTML"
-	ConnectorsTelegramMonitoringChatId = "monitoringChatId"
+	Connectors                                    = "connectors"
+	ConnectorsTelegram                            = "telegram"
+	ConnectorsTelegramBotTokenKey                 = "botTokenKey"
+	ConnectorsTelegramApiUrlSendMessage           = "apiUrlSendMessage"
+	ConnectorsTelegramParseModeMarkdown           = "parseModeMarkdown"
+	ConnectorsTelegramParseModeHTML               = "parseModeHTML"
+	ConnectorsTelegramMonitoringChatId            = "monitoringChatId"
 	ConnectorsTelegramContinuousIntegrationChatId = "continuousIntegrationChatId"
-	ConnectorsTelegramPrivateChatId = "privateChatId"
-
+	ConnectorsTelegramPrivateChatId               = "privateChatId"
 )

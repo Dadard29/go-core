@@ -10,10 +10,10 @@ import (
 )
 
 type Profile struct {
-	ProfileKey string `gorm:"type:varchar(70);index:profile_key;primary_key"`
-	Username string `gorm:"type:varchar(70);index:username"`
-	PasswordEncrypt string `gorm:"type:varchar(70);index:password_encrypt"`
-	DateCreated time.Time `gorm:"type:date;index:date_created"`
+	ProfileKey      string    `gorm:"type:varchar(70);index:profile_key;primary_key"`
+	Username        string    `gorm:"type:varchar(70);index:username"`
+	PasswordEncrypt string    `gorm:"type:varchar(70);index:password_encrypt"`
+	DateCreated     time.Time `gorm:"type:date;index:date_created"`
 }
 
 type ProfileChangePassword struct {
@@ -21,8 +21,8 @@ type ProfileChangePassword struct {
 }
 
 type ProfileJson struct {
-	ProfileKey string
-	Username string
+	ProfileKey  string
+	Username    string
 	DateCreated time.Time
 }
 
@@ -55,13 +55,13 @@ func ComparePassword(password string, hash string) bool {
 }
 
 type Api struct {
-	Name string `gorm:"type:varchar(70);index:name;primary_key"`
-	Description string `gorm:"type:varchar(300);index:description"`
-	Host string `gorm:"type:varchar(100);index:host"`
-	DocumentationUrl string `gorm:"type:varchar(100);index:documentation_url"`
-	BuildUrl string `gorm:"type:varchar(100);index:build_url"`
-	Image string `gorm:"type:varchar(70);index:image"`
-	CreationDate *time.Time `gorm:"type:date;index:creation_date"`
+	Name             string     `gorm:"type:varchar(70);index:name;primary_key"`
+	Description      string     `gorm:"type:varchar(300);index:description"`
+	Host             string     `gorm:"type:varchar(100);index:host"`
+	DocumentationUrl string     `gorm:"type:varchar(100);index:documentation_url"`
+	BuildUrl         string     `gorm:"type:varchar(100);index:build_url"`
+	Image            string     `gorm:"type:varchar(70);index:image"`
+	CreationDate     *time.Time `gorm:"type:date;index:creation_date"`
 }
 
 func (Api) TableName() string {
@@ -69,11 +69,11 @@ func (Api) TableName() string {
 }
 
 type Subscription struct {
-	Id int `gorm:"type:varchar(70);index:id;primary_key;auto_increment"`
-	ProfileKey string `gorm:"type:varchar(70);index:profile_key"`
-	Profile Profile `gorm:"foreignkey:ProfileKey"`
-	ApiName string `gorm:"type:varchar(70);index:api_name"`
-	Api Api `gorm:"foreignkey:ApiName"`
+	Id             int        `gorm:"type:varchar(70);index:id;primary_key;auto_increment"`
+	ProfileKey     string     `gorm:"type:varchar(70);index:profile_key"`
+	Profile        Profile    `gorm:"foreignkey:ProfileKey"`
+	ApiName        string     `gorm:"type:varchar(70);index:api_name"`
+	Api            Api        `gorm:"foreignkey:ApiName"`
 	DateSubscribed *time.Time `gorm:"type:date;index:date_subscribed"`
 }
 
