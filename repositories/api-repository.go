@@ -16,6 +16,12 @@ func apiExists(a models.ApiModel) bool {
 	return aDb.Name == a.Name
 }
 
+func ApiGetList() ([]models.ApiModel, string, error) {
+	var aList []models.ApiModel
+	api.Api.Database.Orm.Find(&aList, &models.ApiModel{})
+	return aList, "api list retrieved", nil
+}
+
 func ApiGet(apiName string) (models.ApiModel, string, error) {
 	var a models.ApiModel
 	api.Api.Database.Orm.Where(&models.ApiModel{
@@ -48,7 +54,7 @@ func ApiCreate(a models.ApiModel) (models.ApiModel, string, error) {
 
 func ApiUpdate(a models.ApiModel) (models.ApiModel, string, error) {
 	if !apiExists(a) {
-		msg := fmt.Sprintf("no api with name %s found", a.Name)
+		msg := fmt.Sprintf("no api with name %s not found", a.Name)
 		return models.ApiModel{}, msg, errors.New(msg)
 	}
 
@@ -59,7 +65,7 @@ func ApiUpdate(a models.ApiModel) (models.ApiModel, string, error) {
 
 func ApiDelete(a models.ApiModel) (models.ApiModel, string, error) {
 	if !apiExists(a) {
-		msg := fmt.Sprintf("no api with name %s found", a.Name)
+		msg := fmt.Sprintf("no api with name %s not found", a.Name)
 		return models.ApiModel{}, msg, errors.New(msg)
 	}
 

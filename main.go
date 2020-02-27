@@ -29,6 +29,10 @@ var routes = service.RouteMapping{
 			Handler: controllers.ApiHandler,
 			Method:  []string{http.MethodGet},
 		},
+		"/subs": {
+			Handler: controllers.SubsHandler,
+			Method:  []string{http.MethodGet, http.MethodPost, http.MethodDelete},
+		},
 	},
 }
 

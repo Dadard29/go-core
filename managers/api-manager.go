@@ -5,6 +5,17 @@ import (
 	"github.com/Dadard29/go-core/repositories"
 )
 
+func ApiManagerList() ([]models.ApiModel, string, error) {
+	var aList []models.ApiModel
+
+	aDb, message, err := repositories.ApiGetList()
+	if err != nil {
+		return aList, message, err
+	}
+
+	return aDb, message, nil
+}
+
 func ApiManagerGet(apiName string) (models.ApiModel, string, error) {
 	var a models.ApiModel
 
@@ -13,5 +24,5 @@ func ApiManagerGet(apiName string) (models.ApiModel, string, error) {
 		return a, message, err
 	}
 
-	return aDb, message, err
+	return aDb, message, nil
 }

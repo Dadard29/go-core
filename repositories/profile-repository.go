@@ -13,6 +13,20 @@ func profileExists(p models.Profile) bool {
 	return profileDb.Username == p.Username
 }
 
+func ProfileGetFromKey(profileKey string) (models.Profile, string, error) {
+	var p models.Profile
+	api.Api.Database.Orm.Where(&models.Profile{
+		ProfileKey: profileKey,
+	}).First(&p)
+
+	if !profileExists(p) {
+		msg := fmt.Sprintf("no profile with this key found")
+		return p, msg, errors.New(msg)
+	}
+
+	return p, "profile retrieved", nil
+}
+
 func ProfileGetFromUsername(username string) (models.Profile, string, error) {
 	var p models.Profile
 	api.Api.Database.Orm.Where(&models.Profile{Username: username}).First(&p)

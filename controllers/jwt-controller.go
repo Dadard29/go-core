@@ -90,11 +90,11 @@ func JwtValidate(w http.ResponseWriter, r *http.Request) {
 
 	jwtCiphered := body.JwtCiphered
 
-	if status, code, msg := managers.ValidateJwtBody(jwtCiphered); !status {
-		err := API.BuildErrorResponse(code, msg, w)
+	if status:= managers.ValidateJwtCiphered(jwtCiphered); status == nil {
+		err := API.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
 		logger.CheckErr(err)
 	} else {
-		err := API.BuildJsonResponse(true, msg, "", w)
+		err := API.BuildJsonResponse(true, "valid token", "", w)
 		logger.CheckErr(err)
 	}
 }

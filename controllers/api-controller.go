@@ -8,6 +8,13 @@ import (
 )
 
 func ApiHandler(w http.ResponseWriter, r *http.Request) {
+	if status := managers.ValidateJwtCiphered(
+		r.Header.Get(config.AuthorizationHeader)); status == nil {
+		err := API.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
+		logger.CheckErr(err)
+		return
+	}
+
 	if r.Method == http.MethodGet {
 		ApiGet(w, r)
 	} else {
@@ -20,14 +27,8 @@ func ApiHandler(w http.ResponseWriter, r *http.Request) {
 // Params: 			apiName
 // Body: 			None
 func ApiGet(w http.ResponseWriter, r *http.Request) {
-	if status, _, msg := managers.ValidateJwtBody(
-		r.Header.Get(config.AuthorizationHeader)); !status {
-		err := API.BuildErrorResponse(http.StatusForbidden, msg, w)
-		logger.CheckErr(err)
-		return
-	}
-
-	api, message, err := managers.ApiManagerGet(r.URL.Query().Get("apiName"))
+	// api, message, err := managers.ApiManagerGet(r.URL.Query().Get("apiName"))
+	api, message, err := managers.ApiManagerList()
 	if err != nil {
 		logger.Error(err.Error())
 		err := API.BuildErrorResponse(http.StatusInternalServerError, message, w)
