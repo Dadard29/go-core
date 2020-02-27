@@ -1,10 +1,8 @@
 package controllers
 
 import (
-	"errors"
 	"github.com/Dadard29/go-api-utils/API"
 	"github.com/Dadard29/go-api-utils/auth"
-	"github.com/Dadard29/go-core/api"
 	"github.com/Dadard29/go-core/config"
 	"github.com/Dadard29/go-core/managers"
 	"github.com/Dadard29/go-core/models"
@@ -19,22 +17,6 @@ func JwtHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		API.BuildMethodNotAllowedResponse(w)
 	}
-}
-
-func getJwtSecret() string {
-	jwtSecretKey, err := api.Api.Config.GetValueFromFile(
-		config.Profile,
-		config.ProfileJwt,
-		config.ProfileJwtSecretKey)
-
-	logger.CheckErrFatal(err)
-
-	secret := api.Api.Config.GetEnv(jwtSecretKey)
-	if secret == "" {
-		logger.CheckErrFatal(errors.New("no configured jwt secret"))
-	}
-
-	return secret
 }
 
 // POST
@@ -60,7 +42,7 @@ func JwtCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	logger.Debug(message)
-	secret := getJwtSecret()
+	secret := managers.GetJwtSecret()
 
 	pl := models.JwtPayload{
 		ProfileKey: profile.ProfileKey,
@@ -104,27 +86,15 @@ func JwtValidate(w http.ResponseWriter, r *http.Request) {
 	if err := API.ParseJsonBody(r, &body); err != nil || body.JwtCiphered == "" {
 		err := API.BuildErrorResponse(http.StatusBadRequest, "wrong body format", w)
 		logger.CheckErr(err)
-		return
 	}
 
 	jwtCiphered := body.JwtCiphered
-	jwtDeciphered, err := auth.DecipherJwtWithJwe(config.PrivateKeyFile, []byte(jwtCiphered))
-	if err != nil {
-		logger.Error(err.Error())
-		err := API.BuildErrorResponse(http.StatusInternalServerError, "error deciphering token", w)
-		logger.CheckErr(err)
-		return
-	}
 
-	secret := getJwtSecret()
-	_, err = auth.VerifyJwtHS256(jwtDeciphered, secret)
-	if err != nil {
-		logger.Error(err.Error())
-		err := API.BuildErrorResponse(http.StatusBadRequest, "token invalid", w)
+	if status, code, msg := managers.ValidateJwtBody(jwtCiphered); !status {
+		err := API.BuildErrorResponse(code, msg, w)
 		logger.CheckErr(err)
-		return
+	} else {
+		err := API.BuildJsonResponse(true, msg, "", w)
+		logger.CheckErr(err)
 	}
-
-	err = API.BuildJsonResponse(true, "token valid", "", w)
-	logger.CheckErr(err)
 }

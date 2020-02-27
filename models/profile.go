@@ -54,26 +54,12 @@ func ComparePassword(password string, hash string) bool {
 	return err == nil
 }
 
-type Api struct {
-	Name             string     `gorm:"type:varchar(70);index:name;primary_key"`
-	Description      string     `gorm:"type:varchar(300);index:description"`
-	Host             string     `gorm:"type:varchar(100);index:host"`
-	DocumentationUrl string     `gorm:"type:varchar(100);index:documentation_url"`
-	BuildUrl         string     `gorm:"type:varchar(100);index:build_url"`
-	Image            string     `gorm:"type:varchar(70);index:image"`
-	CreationDate     *time.Time `gorm:"type:date;index:creation_date"`
-}
-
-func (Api) TableName() string {
-	return "api"
-}
-
 type Subscription struct {
 	Id             int        `gorm:"type:varchar(70);index:id;primary_key;auto_increment"`
 	ProfileKey     string     `gorm:"type:varchar(70);index:profile_key"`
 	Profile        Profile    `gorm:"foreignkey:ProfileKey"`
 	ApiName        string     `gorm:"type:varchar(70);index:api_name"`
-	Api            Api        `gorm:"foreignkey:ApiName"`
+	Api            ApiModel        `gorm:"foreignkey:ApiName"`
 	DateSubscribed *time.Time `gorm:"type:date;index:date_subscribed"`
 }
 

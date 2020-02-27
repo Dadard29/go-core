@@ -17,7 +17,7 @@ func ProfileManagerSignIn(username string, password string) (models.Profile, str
 
 	if !models.ComparePassword(password, profileDb.PasswordEncrypt) {
 		message := "bad password"
-		return models.Profile{}, message, errors.New(message)
+		return p, message, errors.New(message)
 	}
 
 	return profileDb, message, nil

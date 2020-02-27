@@ -25,6 +25,10 @@ var routes = service.RouteMapping{
 			Handler: controllers.ProfileHandler,
 			Method:  []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
 		},
+		"/api": {
+			Handler: controllers.ApiHandler,
+			Method:  []string{http.MethodGet},
+		},
 	},
 }
 
@@ -36,7 +40,7 @@ func main() {
 	Api.Logger.CheckErr(err)
 	Api.Database = database.NewConnector(dbConfig, true, []interface{}{
 		models.Profile{},
-		models.Api{},
+		models.ApiModel{},
 		models.Subscription{},
 	})
 

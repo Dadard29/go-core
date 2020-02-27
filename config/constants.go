@@ -5,6 +5,7 @@ import "time"
 // misc
 var PrivateKeyFile = "private.pem"
 var JwtValidityDuration = 24 * time.Hour
+var AuthorizationHeader = "Authorization"
 
 const (
 	Api = "api"
