@@ -4,7 +4,6 @@ import (
 	"github.com/Dadard29/go-api-utils/API"
 	"github.com/Dadard29/go-core/config"
 	"github.com/Dadard29/go-core/managers"
-	"github.com/Dadard29/go-core/models"
 	"net/http"
 )
 
@@ -17,14 +16,15 @@ func SubsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pl := jwt.Infos.(models.JwtPayload)
+	pl := jwt.Infos.(map[string]interface{})
+	profileKey := pl["ProfileKey"].(string)
 
 	if r.Method == http.MethodGet {
-		SubsList(w, pl.ProfileKey)
+		SubsList(w, profileKey)
 	} else if r.Method == http.MethodPost {
-		Subscribe(w, r)
+		Subscribe(w, r, profileKey)
 	} else if r.Method == http.MethodDelete {
-		Unsubscribe(w, r)
+		Unsubscribe(w, r, profileKey)
 	} else {
 		API.BuildMethodNotAllowedResponse(w)
 	}
@@ -35,7 +35,7 @@ func SubsHandler(w http.ResponseWriter, r *http.Request) {
 // Params: 			None
 // Body: 			None
 func SubsList(w http.ResponseWriter, profileKey string) {
-	api, message, err := managers.SubsManagerList(profileKey)
+	subList, message, err := managers.SubsManagerList(profileKey)
 	if err != nil {
 		logger.Error(err.Error())
 		err := API.BuildErrorResponse(http.StatusInternalServerError, message, w)
@@ -43,7 +43,7 @@ func SubsList(w http.ResponseWriter, profileKey string) {
 		return
 	}
 
-	err = API.BuildJsonResponse(true, message, api, w)
+	err = API.BuildJsonResponse(true, message, subList, w)
 	logger.CheckErr(err)
 }
 
@@ -51,14 +51,46 @@ func SubsList(w http.ResponseWriter, profileKey string) {
 // Authorization: 	JWT in header Authorization
 // Params: 			apiName
 // Body: 			None
-func Subscribe(w http.ResponseWriter, r *http.Request) {
-	// todo
+func Subscribe(w http.ResponseWriter, r *http.Request, profileKey string) {
+	apiName := r.URL.Query().Get("apiName")
+	if apiName == "" {
+		err := API.BuildErrorResponse(http.StatusBadRequest, "missing parameter", w)
+		logger.CheckErr(err)
+		return
+	}
+
+	subList, message, err := managers.SubsManagerCreate(profileKey, apiName)
+	if err != nil {
+		logger.Error(err.Error())
+		err := API.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		logger.CheckErr(err)
+		return
+	}
+
+	err = API.BuildJsonResponse(true, message, subList, w)
+	logger.CheckErr(err)
 }
 
 // DELETE
 // Authorization: 	JWT in header Authorization
 // Params: 			apiName
 // Body: 			None
-func Unsubscribe(w http.ResponseWriter, r *http.Request) {
-	// todo
+func Unsubscribe(w http.ResponseWriter, r *http.Request, profileKey string) {
+	apiName := r.URL.Query().Get("apiName")
+	if apiName == "" {
+		err := API.BuildErrorResponse(http.StatusBadRequest, "missing parameter", w)
+		logger.CheckErr(err)
+		return
+	}
+
+	subList, message, err := managers.SubsManagerDelete(profileKey, apiName)
+	if err != nil {
+		logger.Error(err.Error())
+		err := API.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		logger.CheckErr(err)
+		return
+	}
+
+	err = API.BuildJsonResponse(true, message, subList, w)
+	logger.CheckErr(err)
 }

@@ -26,6 +26,14 @@ type ProfileJson struct {
 	DateCreated time.Time
 }
 
+func NewProfileJson(p Profile) ProfileJson {
+	return ProfileJson{
+		ProfileKey:  p.ProfileKey,
+		Username:    p.Username,
+		DateCreated: p.DateCreated,
+	}
+}
+
 func (Profile) TableName() string {
 	return "profile"
 }
@@ -60,7 +68,13 @@ type Subscription struct {
 	Profile        Profile    `gorm:"foreignkey:ProfileKey"`
 	ApiName        string     `gorm:"type:varchar(70);index:api_name"`
 	Api            ApiModel        `gorm:"foreignkey:ApiName"`
-	DateSubscribed *time.Time `gorm:"type:date;index:date_subscribed"`
+	DateSubscribed time.Time `gorm:"type:date;index:date_subscribed"`
+}
+
+type SubscriptionJson struct {
+	Profile ProfileJson
+	Api ApiModel
+	DateSubscribed time.Time
 }
 
 func (Subscription) TableName() string {
