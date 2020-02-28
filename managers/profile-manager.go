@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-func ProfileManagerSignIn(username string, password string) (models.Profile, string, error) {
-	var p models.Profile
+func ProfileManagerSignIn(username string, password string) (models.ProfileJson, string, error) {
+	var p models.ProfileJson
 
 	profileDb, message, err := repositories.ProfileGetFromUsername(username)
 	if err != nil {
@@ -20,64 +20,86 @@ func ProfileManagerSignIn(username string, password string) (models.Profile, str
 		return p, message, errors.New(message)
 	}
 
-	return profileDb, message, nil
+	return models.NewProfileJson(profileDb), message, nil
 }
 
-func ProfileManagerSignUp(username string, password string) (models.Profile, string, error) {
+func ProfileManagerSignUp(username string, password string) (models.ProfileJson, string, error) {
 	dateCreated := time.Now()
 	p := models.Profile{}
 	p.ProfileKey = p.NewProfileKey()
 	p.Username = username
 	hash, err := models.HashPassword(password)
 	if err != nil {
-		return models.Profile{}, "error while hashing password", err
+		return models.ProfileJson{}, "error while hashing password", err
 	}
 
 	p.PasswordEncrypt = hash
 	p.DateCreated = dateCreated
 
-	return repositories.ProfileCreate(p)
+	profileDb, msg, err := repositories.ProfileCreate(p)
+	if err !=  nil {
+		logger.Error(err.Error())
+		return models.ProfileJson{}, msg, errors.New(msg)
+	}
+
+	return models.NewProfileJson(profileDb), "profile created", nil
 }
 
-func ProfileManagerChangePassword(username string, password string, newPassword string) (models.Profile, string, error) {
+func ProfileManagerChangePassword(username string, password string, newPassword string) (models.ProfileJson, string, error) {
+	var pJson models.ProfileJson
+
 	p, message, err := repositories.ProfileGetFromUsername(username)
 	if err != nil {
-		return p, message, err
+		return pJson, message, err
 	}
 
 	// check auth
 	if !models.ComparePassword(password, p.PasswordEncrypt) {
 		message := "bad password"
-		return models.Profile{}, message, errors.New(message)
+		return pJson, message, errors.New(message)
 	}
 
 	// check new password with current
 	if models.ComparePassword(newPassword, p.PasswordEncrypt) {
 		msg := "new password identical to the previous"
-		return models.Profile{}, msg, errors.New(msg)
+		return pJson, msg, errors.New(msg)
 	}
 
 	newPasswordEncrypt, err := models.HashPassword(newPassword)
 	if err != nil {
-		return models.Profile{}, "error while hashing new password", err
+		return pJson, "error while hashing new password", err
 	}
 
 	p.PasswordEncrypt = newPasswordEncrypt
 
-	return repositories.ProfileUpdate(p)
+	profileDb, msg, err := repositories.ProfileUpdate(p)
+	if err != nil {
+		logger.Error(err.Error())
+		return pJson, msg, errors.New(msg)
+	}
+
+	return models.NewProfileJson(profileDb), "password updated", nil
 }
 
-func ProfileManagerDelete(username string, password string) (models.Profile, string, error) {
+func ProfileManagerDelete(username string, password string) (models.ProfileJson, string, error) {
+	var pJson models.ProfileJson
+
 	p, message, err := repositories.ProfileGetFromUsername(username)
 	if err != nil {
-		return p, message, err
+		return pJson, message, err
 	}
 
 	// check auth
 	if !models.ComparePassword(password, p.PasswordEncrypt) {
 		message := "bad password"
-		return models.Profile{}, message, errors.New(message)
+		return pJson, message, errors.New(message)
 	}
 
-	return repositories.ProfileDelete(p)
+	profileDb, msg, err := repositories.ProfileDelete(p)
+	if err != nil {
+		logger.Error(err.Error())
+		return pJson, msg, errors.New(msg)
+	}
+
+	return models.NewProfileJson(profileDb), "profile deleted", nil
 }
