@@ -25,8 +25,11 @@ func SubsHandler(w http.ResponseWriter, r *http.Request) {
 		Subscribe(w, r, profileKey)
 	} else if r.Method == http.MethodDelete {
 		Unsubscribe(w, r, profileKey)
+	} else if r.Method == http.MethodOptions {
+		SubsCheckExists(w, r)
 	} else {
-		API.BuildMethodNotAllowedResponse(w)
+		err := API.BuildMethodNotAllowedResponse(w)
+		logger.CheckErr(err)
 	}
 }
 
@@ -47,6 +50,30 @@ func SubsList(w http.ResponseWriter, profileKey string) {
 	logger.CheckErr(err)
 }
 
+// GET
+// Authorization: 	JWT in header Authorization
+// Params: 			accessToken
+// Body: 			None
+func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
+	subToken := r.URL.Query().Get("accessToken")
+	if subToken == "" {
+		err := API.BuildMissingParameter(w)
+		logger.CheckErr(err)
+		return
+	}
+
+	status, message, err := managers.SubsManagerExists(subToken)
+	if err != nil {
+		logger.Error(err.Error())
+		err := API.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		logger.CheckErr(err)
+		return
+	}
+
+	err = API.BuildJsonResponse(status, message, "", w)
+	logger.CheckErr(err)
+}
+
 // POST
 // Authorization: 	JWT in header Authorization
 // Params: 			apiName
@@ -54,7 +81,7 @@ func SubsList(w http.ResponseWriter, profileKey string) {
 func Subscribe(w http.ResponseWriter, r *http.Request, profileKey string) {
 	apiName := r.URL.Query().Get("apiName")
 	if apiName == "" {
-		err := API.BuildErrorResponse(http.StatusBadRequest, "missing parameter", w)
+		err := API.BuildMissingParameter(w)
 		logger.CheckErr(err)
 		return
 	}
@@ -78,7 +105,7 @@ func Subscribe(w http.ResponseWriter, r *http.Request, profileKey string) {
 func Unsubscribe(w http.ResponseWriter, r *http.Request, profileKey string) {
 	apiName := r.URL.Query().Get("apiName")
 	if apiName == "" {
-		err := API.BuildErrorResponse(http.StatusBadRequest, "missing parameter", w)
+		err := API.BuildMissingParameter(w)
 		logger.CheckErr(err)
 		return
 	}

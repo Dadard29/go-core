@@ -1,10 +1,32 @@
 package managers
 
 import (
+	"crypto/sha256"
+	"fmt"
 	"github.com/Dadard29/go-core/models"
 	"github.com/Dadard29/go-core/repositories"
+	"math/rand"
+	"strconv"
 	"time"
 )
+
+func subsGenerateAccessToken() string {
+	seed := time.Now().UnixNano()
+	rand.Seed(seed)
+
+	i := rand.Int()
+
+	keyByte := []byte(strconv.Itoa(i))
+
+	hash := sha256.New()
+
+	hash.Write(keyByte)
+	return fmt.Sprintf("%x", hash.Sum(nil))
+}
+
+func SubsManagerExists(subToken string) (bool, string, error) {
+	return repositories.SubsExistsFromToken(subToken), "sub checked", nil
+}
 
 func SubsManagerList(profileKey string) ([]models.SubscriptionJson, string, error) {
 	var s []models.SubscriptionJson
@@ -27,6 +49,7 @@ func SubsManagerList(profileKey string) ([]models.SubscriptionJson, string, erro
 		}
 
 		subListJson = append(subListJson, models.SubscriptionJson{
+			AccessToken: 	sub.AccessToken,
 			Profile:        models.NewProfileJson(p),
 			Api:            a,
 			DateSubscribed: sub.DateSubscribed,
@@ -50,6 +73,7 @@ func SubsManagerCreate(profileKey string, apiName string) (models.SubscriptionJs
 	}
 	
 	subDb, msg, err := repositories.SubsCreate(models.Subscription{
+		AccessToken:    subsGenerateAccessToken(),
 		ProfileKey:     p.ProfileKey,
 		ApiName:        a.Name,
 		DateSubscribed: time.Now(),
@@ -59,6 +83,7 @@ func SubsManagerCreate(profileKey string, apiName string) (models.SubscriptionJs
 	}
 
 	subJson := models.SubscriptionJson{
+		AccessToken: 	subDb.AccessToken,
 		Profile:        models.NewProfileJson(p),
 		Api:            a,
 		DateSubscribed: subDb.DateSubscribed,
@@ -89,6 +114,7 @@ func SubsManagerDelete(profileKey string, apiName string) (models.SubscriptionJs
 	}
 
 	subJson := models.SubscriptionJson{
+		AccessToken: 	subDb.AccessToken,
 		Profile:        models.NewProfileJson(p),
 		Api:            a,
 		DateSubscribed: subDb.DateSubscribed,

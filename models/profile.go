@@ -63,17 +63,18 @@ func ComparePassword(password string, hash string) bool {
 }
 
 type Subscription struct {
-	Id             int        `gorm:"type:varchar(70);index:id;primary_key;auto_increment"`
-	ProfileKey     string     `gorm:"type:varchar(70);index:profile_key"`
-	Profile        Profile    `gorm:"foreignkey:ProfileKey"`
-	ApiName        string     `gorm:"type:varchar(70);index:api_name"`
-	Api            ApiModel        `gorm:"foreignkey:ApiName"`
+	AccessToken    string    `gorm:"type:varchar(70);index:access_token;primary_key"`
+	ProfileKey     string    `gorm:"type:varchar(70);index:profile_key"`
+	Profile        Profile   `gorm:"foreignkey:ProfileKey"`
+	ApiName        string    `gorm:"type:varchar(70);index:api_name"`
+	Api            ApiModel  `gorm:"foreignkey:ApiName"`
 	DateSubscribed time.Time `gorm:"type:date;index:date_subscribed"`
 }
 
 type SubscriptionJson struct {
-	Profile ProfileJson
-	Api ApiModel
+	AccessToken    string
+	Profile        ProfileJson
+	Api            ApiModel
 	DateSubscribed time.Time
 }
 

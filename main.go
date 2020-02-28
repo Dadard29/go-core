@@ -31,7 +31,7 @@ var routes = service.RouteMapping{
 		},
 		"/subs": {
 			Handler: controllers.SubsHandler,
-			Method:  []string{http.MethodGet, http.MethodPost, http.MethodDelete},
+			Method:  []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodOptions},
 		},
 	},
 }

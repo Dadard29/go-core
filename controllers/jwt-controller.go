@@ -15,7 +15,8 @@ func JwtHandler(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == http.MethodPost {
 		JwtCreate(w, r)
 	} else {
-		API.BuildMethodNotAllowedResponse(w)
+		err := API.BuildMethodNotAllowedResponse(w)
+		logger.CheckErr(err)
 	}
 }
 

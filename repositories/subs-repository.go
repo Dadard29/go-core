@@ -16,6 +16,14 @@ func subExists(s models.Subscription) bool {
 	return subDb.ProfileKey == s.ProfileKey && subDb.ApiName == s.ApiName
 }
 
+func SubsExistsFromToken(subToken string) bool {
+	var subDb models.Subscription
+	api.Api.Database.Orm.Where(&models.Subscription{
+		AccessToken: subToken,
+	}).First(&subDb)
+	return subDb.AccessToken == subToken
+}
+
 func SubsListFromProfile(p models.Profile) ([]models.Subscription, string, error) {
 	var s []models.Subscription
 	api.Api.Database.Orm.Find(&s, &models.Subscription{

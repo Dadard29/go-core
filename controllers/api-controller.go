@@ -18,7 +18,8 @@ func ApiHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		ApiGet(w, r)
 	} else {
-		API.BuildMethodNotAllowedResponse(w)
+		err := API.BuildMethodNotAllowedResponse(w)
+		logger.CheckErr(err)
 	}
 }
 
@@ -55,7 +56,7 @@ func ApiGet(w http.ResponseWriter, r *http.Request) {
 // this endpoint MUST NOT be activated now
 // need to think on a privilege system before
 func ApiCreate(w http.ResponseWriter, r *http.Request) {
-	// TODO
+	// TODO.md
 }
 
 // PUT
@@ -67,7 +68,7 @@ func ApiCreate(w http.ResponseWriter, r *http.Request) {
 // this endpoint MUST NOT be activated now
 // need to think on a privilege system before
 func ApiPut(w http.ResponseWriter, r *http.Request) {
-	// TODO
+	// TODO.md
 }
 
 // DELETE
@@ -79,5 +80,5 @@ func ApiPut(w http.ResponseWriter, r *http.Request) {
 // this endpoint MUST NOT be activated now
 // need to think on a privilege system before
 func ApiDelete(w http.ResponseWriter, r *http.Request) {
-	// TODO
+	// TODO.md
 }
