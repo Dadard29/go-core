@@ -25,6 +25,13 @@ const (
 )
 
 const (
+	Session = "session"
+	SessionAuth = "auth"
+	SessionAuthUsernameKey = "usernameKey"
+	SessionAuthUPasswordKey = "passwordKey"
+)
+
+const (
 	Connectors                                    = "connectors"
 	ConnectorsTelegram                            = "telegram"
 	ConnectorsTelegramBotTokenKey                 = "botTokenKey"

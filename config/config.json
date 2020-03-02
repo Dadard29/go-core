@@ -9,7 +9,7 @@
     },
     "server": {
       "host": "0.0.0.0",
-      "port": "8080",
+      "port": "8081",
       "readTimeout": "15",
       "writeTimeout": "15",
       "idleTimeout": "60"
@@ -25,6 +25,12 @@
   "profile": {
     "jwt": {
       "secretKey": "JWT_SECRET"
+    }
+  },
+  "session": {
+    "auth": {
+      "usernameKey": "USERNAME_SESSION",
+      "passwordKey": "PASSWORD_SESSION"
     }
   },
   "notification": {

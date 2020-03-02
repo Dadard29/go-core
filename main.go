@@ -33,6 +33,10 @@ var routes = service.RouteMapping{
 			Handler: controllers.SubsHandler,
 			Method:  []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodOptions},
 		},
+		"/session": {
+			Handler: controllers.SessionHandler,
+			Method:  []string{http.MethodGet, http.MethodPost},
+		},
 	},
 }
 
