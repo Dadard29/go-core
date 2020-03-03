@@ -14,6 +14,7 @@ import (
 func ApiGet(w http.ResponseWriter, r *http.Request) {
 	if !checkJwt(r) {
 		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
+		return
 	}
 
 	apiList, message, err := managers.ApiManagerList()

@@ -16,6 +16,7 @@ func SubsList(w http.ResponseWriter, r *http.Request) {
 	profileKey, err := getProfileKey(r)
 	if err != nil {
 		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
+		return
 	}
 
 	subList, message, err := managers.SubsManagerList(profileKey)
@@ -38,6 +39,7 @@ func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
 	// auth
 	if !checkJwt(r) {
 		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
+		return
 	}
 
 	subToken := r.URL.Query().Get("accessToken")

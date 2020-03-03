@@ -43,6 +43,7 @@ func ProfileGet(w http.ResponseWriter, r *http.Request) {
 	profileKey, err := getProfileKey(r)
 	if err != nil {
 		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
+		return
 	}
 
 	profile, message, err := managers.ProfileManagerGet(profileKey)

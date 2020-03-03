@@ -23,9 +23,6 @@ func getProfileKey(r *http.Request) (string, error) {
 		r.Header.Get(config.AuthorizationHeader))
 	if jwt == nil {
 		return "", errors.New(config.InvalidToken)
-		//err := api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
-		//logger.CheckErr(err)
-		//return ""
 	}
 
 	pl := jwt.Infos.(map[string]interface{})
