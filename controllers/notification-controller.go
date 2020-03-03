@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"errors"
-	"github.com/Dadard29/go-api-utils/API"
 	"github.com/Dadard29/go-core/api"
 	"github.com/Dadard29/go-core/config"
 	"github.com/Dadard29/go-core/managers"
@@ -30,16 +29,16 @@ func NotificationBotWebookRoute(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if secretToken != webhookToken {
-		err := API.BuildErrorResponse(http.StatusUnauthorized, "wrong webhook token", w)
+		err := api.Api.BuildErrorResponse(http.StatusUnauthorized, "wrong webhook token", w)
 		logger.CheckErr(err)
 		return
 	}
 
 	status, message := managers.NotificationBotWebookManager(r.Body)
 	if status == false {
-		err = API.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		err = api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
 	} else {
-		err = API.BuildJsonResponse(true, message, "", w)
+		err = api.Api.BuildJsonResponse(true, message, "", w)
 	}
 
 	logger.CheckErr(err)

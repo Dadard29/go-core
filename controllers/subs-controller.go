@@ -1,52 +1,32 @@
 package controllers
 
 import (
-	"github.com/Dadard29/go-api-utils/API"
+	"github.com/Dadard29/go-core/api"
 	"github.com/Dadard29/go-core/config"
 	"github.com/Dadard29/go-core/managers"
 	"net/http"
 )
 
-func SubsHandler(w http.ResponseWriter, r *http.Request) {
-	jwt := managers.ValidateJwtCiphered(
-		r.Header.Get(config.AuthorizationHeader))
-	if jwt == nil {
-		err := API.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
-		logger.CheckErr(err)
-		return
-	}
-
-	pl := jwt.Infos.(map[string]interface{})
-	profileKey := pl["ProfileKey"].(string)
-
-	if r.Method == http.MethodGet {
-		SubsList(w, profileKey)
-	} else if r.Method == http.MethodPost {
-		Subscribe(w, r, profileKey)
-	} else if r.Method == http.MethodDelete {
-		Unsubscribe(w, r, profileKey)
-	} else if r.Method == http.MethodOptions {
-		SubsCheckExists(w, r)
-	} else {
-		err := API.BuildMethodNotAllowedResponse(w)
-		logger.CheckErr(err)
-	}
-}
-
 // GET
 // Authorization: 	JWT in header Authorization
 // Params: 			None
 // Body: 			None
-func SubsList(w http.ResponseWriter, profileKey string) {
+func SubsList(w http.ResponseWriter, r *http.Request) {
+	// auth
+	profileKey, err := getProfileKey(r)
+	if err != nil {
+		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
+	}
+
 	subList, message, err := managers.SubsManagerList(profileKey)
 	if err != nil {
 		logger.Error(err.Error())
-		err := API.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
 		logger.CheckErr(err)
 		return
 	}
 
-	err = API.BuildJsonResponse(true, message, subList, w)
+	err = api.Api.BuildJsonResponse(true, message, subList, w)
 	logger.CheckErr(err)
 }
 
@@ -55,9 +35,14 @@ func SubsList(w http.ResponseWriter, profileKey string) {
 // Params: 			accessToken
 // Body: 			None
 func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
+	// auth
+	if !checkJwt(r) {
+		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
+	}
+
 	subToken := r.URL.Query().Get("accessToken")
 	if subToken == "" {
-		err := API.BuildMissingParameter(w)
+		err := api.Api.BuildMissingParameter(w)
 		logger.CheckErr(err)
 		return
 	}
@@ -65,12 +50,12 @@ func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
 	status, message, err := managers.SubsManagerExists(subToken)
 	if err != nil {
 		logger.Error(err.Error())
-		err := API.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
 		logger.CheckErr(err)
 		return
 	}
 
-	err = API.BuildJsonResponse(status, message, "", w)
+	err = api.Api.BuildJsonResponse(status, message, "", w)
 	logger.CheckErr(err)
 }
 
@@ -78,10 +63,17 @@ func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
 // Authorization: 	JWT in header Authorization
 // Params: 			apiName
 // Body: 			None
-func Subscribe(w http.ResponseWriter, r *http.Request, profileKey string) {
+func Subscribe(w http.ResponseWriter, r *http.Request) {
+	// auth
+	profileKey, err := getProfileKey(r)
+	if err != nil {
+		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
+		return
+	}
+
 	apiName := r.URL.Query().Get("apiName")
 	if apiName == "" {
-		err := API.BuildMissingParameter(w)
+		err := api.Api.BuildMissingParameter(w)
 		logger.CheckErr(err)
 		return
 	}
@@ -89,12 +81,12 @@ func Subscribe(w http.ResponseWriter, r *http.Request, profileKey string) {
 	subList, message, err := managers.SubsManagerCreate(profileKey, apiName)
 	if err != nil {
 		logger.Error(err.Error())
-		err := API.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
 		logger.CheckErr(err)
 		return
 	}
 
-	err = API.BuildJsonResponse(true, message, subList, w)
+	err = api.Api.BuildJsonResponse(true, message, subList, w)
 	logger.CheckErr(err)
 }
 
@@ -102,10 +94,17 @@ func Subscribe(w http.ResponseWriter, r *http.Request, profileKey string) {
 // Authorization: 	JWT in header Authorization
 // Params: 			apiName
 // Body: 			None
-func Unsubscribe(w http.ResponseWriter, r *http.Request, profileKey string) {
+func Unsubscribe(w http.ResponseWriter, r *http.Request) {
+	// auth
+	profileKey, err := getProfileKey(r)
+	if err != nil {
+		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
+		return
+	}
+
 	apiName := r.URL.Query().Get("apiName")
 	if apiName == "" {
-		err := API.BuildMissingParameter(w)
+		err := api.Api.BuildMissingParameter(w)
 		logger.CheckErr(err)
 		return
 	}
@@ -113,11 +112,11 @@ func Unsubscribe(w http.ResponseWriter, r *http.Request, profileKey string) {
 	subList, message, err := managers.SubsManagerDelete(profileKey, apiName)
 	if err != nil {
 		logger.Error(err.Error())
-		err := API.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
 		logger.CheckErr(err)
 		return
 	}
 
-	err = API.BuildJsonResponse(true, message, subList, w)
+	err = api.Api.BuildJsonResponse(true, message, subList, w)
 	logger.CheckErr(err)
 }

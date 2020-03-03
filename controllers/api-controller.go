@@ -1,43 +1,30 @@
 package controllers
 
 import (
-	"github.com/Dadard29/go-api-utils/API"
+	"github.com/Dadard29/go-core/api"
 	"github.com/Dadard29/go-core/config"
 	"github.com/Dadard29/go-core/managers"
 	"net/http"
 )
-
-func ApiHandler(w http.ResponseWriter, r *http.Request) {
-	if status := managers.ValidateJwtCiphered(
-		r.Header.Get(config.AuthorizationHeader)); status == nil {
-		err := API.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
-		logger.CheckErr(err)
-		return
-	}
-
-	if r.Method == http.MethodGet {
-		ApiGet(w, r)
-	} else {
-		err := API.BuildMethodNotAllowedResponse(w)
-		logger.CheckErr(err)
-	}
-}
 
 // GET
 // Authorization: 	JWT in header Authorization
 // Params: 			apiName
 // Body: 			None
 func ApiGet(w http.ResponseWriter, r *http.Request) {
-	// api, message, err := managers.ApiManagerGet(r.URL.Query().Get("apiName"))
-	api, message, err := managers.ApiManagerList()
+	if !checkJwt(r) {
+		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
+	}
+
+	apiList, message, err := managers.ApiManagerList()
 	if err != nil {
 		logger.Error(err.Error())
-		err := API.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
 		logger.CheckErr(err)
 		return
 	}
 
-	err = API.BuildJsonResponse(true, message, api, w)
+	err = api.Api.BuildJsonResponse(true, message, apiList, w)
 	logger.CheckErr(err)
 }
 

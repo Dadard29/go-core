@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"github.com/Dadard29/go-api-utils/API"
 	"github.com/Dadard29/go-api-utils/auth"
+	"github.com/Dadard29/go-core/api"
 	"github.com/Dadard29/go-core/managers"
 	"net/http"
 )
@@ -11,7 +11,7 @@ func SessionHandler(w http.ResponseWriter, r *http.Request) {
 	username, password, err := auth.ParseBasicAuth(r)
 	if err != nil {
 		logger.Error(err.Error())
-		err := API.BuildErrorResponse(http.StatusUnauthorized, "wrong auth format", w)
+		err := api.Api.BuildErrorResponse(http.StatusUnauthorized, "wrong auth format", w)
 		logger.CheckErr(err)
 		return
 	}
@@ -22,7 +22,7 @@ func SessionHandler(w http.ResponseWriter, r *http.Request) {
 			logger.Error(err.Error())
 		}
 
-		err := API.BuildErrorResponse(http.StatusUnauthorized, "bad credentials", w)
+		err := api.Api.BuildErrorResponse(http.StatusUnauthorized, "bad credentials", w)
 		logger.CheckErr(err)
 		return
 	}
@@ -33,7 +33,7 @@ func SessionHandler(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == http.MethodPost {
 		SessionCreate(w, r)
 	} else {
-		err := API.BuildMethodNotAllowedResponse(w)
+		err := api.Api.BuildMethodNotAllowedResponse(w)
 		logger.CheckErr(err)
 		return
 	}
@@ -45,7 +45,7 @@ func SessionHandler(w http.ResponseWriter, r *http.Request) {
 // Body: 			None
 // Check if a session is enabled
 func SessionGet(w http.ResponseWriter, r *http.Request) {
-
+	// todo
 }
 
 // GET
@@ -53,5 +53,5 @@ func SessionGet(w http.ResponseWriter, r *http.Request) {
 // Params: 			duration
 // Body: 			None
 func SessionCreate(w http.ResponseWriter, r *http.Request) {
-
+	// todo
 }

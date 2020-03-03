@@ -7,6 +7,16 @@ import (
 	"time"
 )
 
+func ProfileManagerGet(profileKey string) (models.ProfileJson, string, error) {
+	var pJson models.ProfileJson
+	p, msg, err := repositories.ProfileGetFromKey(profileKey)
+	if err != nil {
+		return pJson, msg, err
+	}
+
+	return models.NewProfileJson(p), msg, nil
+}
+
 func ProfileManagerSignIn(username string, password string) (models.ProfileJson, string, error) {
 	var p models.ProfileJson
 

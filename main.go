@@ -12,30 +12,53 @@ import (
 
 //var routes = map[string]func(w http.ResponseWriter, r *http.Request) {
 var routes = service.RouteMapping{
-	Mapping: map[string]service.Route{
-		"/notification/bot/webhook": {
-			Handler: controllers.NotificationBotWebookRoute,
-			Method:  []string{http.MethodPost},
+	"/notification/bot/webhook": {
+		Description:   "manage notifications from webhooks",
+		MethodMapping: service.MethodMapping {
+			http.MethodPost: controllers.NotificationBotWebookRoute,
 		},
-		"/profile/auth/jwt": {
-			Handler: controllers.JwtHandler,
-			Method:  []string{http.MethodGet, http.MethodPost},
+	},
+	"/profile/auth/jwt": {
+		Description:   "manage the web tokens",
+		MethodMapping: service.MethodMapping{
+			http.MethodPost: controllers.JwtCreate,
+			http.MethodGet: controllers.JwtValidate,
 		},
-		"/profile/auth": {
-			Handler: controllers.ProfileHandler,
-			Method:  []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
+	},
+	"/profile/auth": {
+		Description:   "manage the profile DB object",
+		MethodMapping: service.MethodMapping{
+			http.MethodPost: controllers.ProfileSignUp,
+			http.MethodGet: controllers.ProfileGet,
+			http.MethodPut: controllers.ProfileChangePassword,
+			http.MethodDelete: controllers.ProfileDelete,
 		},
-		"/api": {
-			Handler: controllers.ApiHandler,
-			Method:  []string{http.MethodGet},
+	},
+	"/api": {
+		Description:   "manage the APIs DB objects",
+		MethodMapping: service.MethodMapping{
+			http.MethodGet: controllers.ApiGet,
 		},
-		"/subs": {
-			Handler: controllers.SubsHandler,
-			Method:  []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodOptions},
+	},
+	"/subs": {
+		Description:   "manage the subscriptions DB objects",
+		MethodMapping: service.MethodMapping{
+			http.MethodPost: controllers.Subscribe,
+			http.MethodGet: controllers.SubsCheckExists,
+			http.MethodDelete: controllers.Unsubscribe,
 		},
-		"/session": {
-			Handler: controllers.SessionHandler,
-			Method:  []string{http.MethodGet, http.MethodPost},
+	},
+	"/subs/list": {
+		Description:   "manage the subscriptions list",
+		MethodMapping: service.MethodMapping{
+			http.MethodGet: controllers.SubsList,
+		},
+	},
+	"/session": {
+		Description:   "manage the privileged sessions",
+		MethodMapping: service.MethodMapping{
+			// todo
+			// leave unavailable for now
 		},
 	},
 }
