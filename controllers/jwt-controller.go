@@ -79,19 +79,12 @@ func JwtCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 // GET
-// Authorization: 	None
+// Authorization: 	JWT in header Authorization
 // Params: 			None
-// Body: 			{"JwtCiphered": "..."}
+// Body: 			None
 func JwtValidate(w http.ResponseWriter, r *http.Request) {
-	var body models.JwtValidate
-	if err := API.ParseJsonBody(r, &body); err != nil || body.JwtCiphered == "" {
-		err := API.BuildErrorResponse(http.StatusBadRequest, "wrong body format", w)
-		logger.CheckErr(err)
-	}
-
-	jwtCiphered := body.JwtCiphered
-
-	if status:= managers.ValidateJwtCiphered(jwtCiphered); status == nil {
+	if status:= managers.ValidateJwtCiphered(
+		r.Header.Get(config.AuthorizationHeader)); status == nil {
 		err := API.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
 		logger.CheckErr(err)
 	} else {
