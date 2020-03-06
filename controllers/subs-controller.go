@@ -37,19 +37,34 @@ func SubsList(w http.ResponseWriter, r *http.Request) {
 // Body: 			None
 func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
 	// auth
-	if !checkJwt(r) {
+	var err error
+	profileKey, err := getProfileKey(r)
+	if err != nil {
 		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
 		return
 	}
 
 	subToken := r.URL.Query().Get("accessToken")
-	if subToken == "" {
-		err := api.Api.BuildMissingParameter(w)
-		logger.CheckErr(err)
+	apiName := r.URL.Query().Get("apiName")
+
+	var status bool
+	var message string
+
+	if subToken == "" && apiName == "" {
+		// no param given
+		api.Api.BuildMissingParameter(w)
 		return
+	} else if subToken != "" && apiName != "" {
+		// bot params given
+		api.Api.BuildErrorResponse(http.StatusBadRequest, "args overload", w)
+		return
+	} else if subToken != "" {
+		status, message, err = managers.SubsManagerExistsFromToken(subToken)
+	} else if apiName != "" {
+		status, message, err = managers.SubsManagerExistsFromApiName(apiName, profileKey)
 	}
 
-	status, message, err := managers.SubsManagerExists(subToken)
+
 	if err != nil {
 		logger.Error(err.Error())
 		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)

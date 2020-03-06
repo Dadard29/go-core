@@ -24,8 +24,12 @@ func subsGenerateAccessToken() string {
 	return fmt.Sprintf("%x", hash.Sum(nil))
 }
 
-func SubsManagerExists(subToken string) (bool, string, error) {
+func SubsManagerExistsFromToken(subToken string) (bool, string, error) {
 	return repositories.SubsExistsFromToken(subToken), "sub checked", nil
+}
+
+func SubsManagerExistsFromApiName(apiName string, profileKey string) (bool, string, error) {
+	return repositories.SubsExistsFromApiNAme(apiName, profileKey), "sub checked", nil
 }
 
 func SubsManagerList(profileKey string) ([]models.SubscriptionJson, string, error) {
