@@ -26,7 +26,7 @@ func JwtCreate(w http.ResponseWriter, r *http.Request) {
 
 	profile, message, err := managers.ProfileManagerSignIn(username, password)
 	if err != nil {
-		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, profileErrorMsg, w)
 		logger.CheckErr(err)
 		return
 	}

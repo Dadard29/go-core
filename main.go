@@ -40,6 +40,12 @@ var routes = service.RouteMapping{
 			http.MethodGet: controllers.ApiGet,
 		},
 	},
+	"/api/list": {
+		Description:   "list the APIs DB objects",
+		MethodMapping: service.MethodMapping{
+			http.MethodGet: controllers.ApiListGet,
+		},
+	},
 	"/subs": {
 		Description:   "manage the subscriptions DB objects",
 		MethodMapping: service.MethodMapping{

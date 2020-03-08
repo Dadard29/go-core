@@ -4,6 +4,7 @@ import (
 	"github.com/Dadard29/go-core/api"
 	"github.com/Dadard29/go-core/config"
 	"github.com/Dadard29/go-core/managers"
+	"github.com/Dadard29/go-core/models"
 	"net/http"
 )
 
@@ -37,19 +38,35 @@ func SubsList(w http.ResponseWriter, r *http.Request) {
 // Body: 			None
 func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
 	// auth
-	if !checkJwt(r) {
+	var err error
+	profileKey, err := getProfileKey(r)
+	if err != nil {
 		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
 		return
 	}
 
 	subToken := r.URL.Query().Get("accessToken")
-	if subToken == "" {
-		err := api.Api.BuildMissingParameter(w)
-		logger.CheckErr(err)
+	apiName := r.URL.Query().Get("apiName")
+
+	var s models.SubscriptionJson
+	var message string
+
+	if subToken == "" && apiName == "" {
+		// no param given
+		api.Api.BuildMissingParameter(w)
+		return
+	} else if subToken != "" && apiName != "" {
+		api.Api.BuildErrorResponse(http.StatusBadRequest, "args overload", w)
+		return
+	} else if subToken != "" {
+		s, message, err = managers.SubsManagerGetFromToken(subToken)
+	} else if apiName != "" {
+		s, message, err = managers.SubsManagerGetFromApiName(apiName, profileKey)
+	}  else {
+		api.Api.BuildMissingParameter(w)
 		return
 	}
 
-	status, message, err := managers.SubsManagerExists(subToken)
 	if err != nil {
 		logger.Error(err.Error())
 		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
@@ -57,7 +74,7 @@ func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = api.Api.BuildJsonResponse(status, message, "", w)
+	err = api.Api.BuildJsonResponse(true, message, s, w)
 	logger.CheckErr(err)
 }
 

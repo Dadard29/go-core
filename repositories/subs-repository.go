@@ -7,7 +7,7 @@ import (
 	"github.com/Dadard29/go-core/models"
 )
 
-func subExists(s models.Subscription) bool {
+func subExistsFromPkAndApiName(s models.Subscription) bool {
 	var subDb models.Subscription
 	api.Api.Database.Orm.Where(&models.Subscription{
 		ProfileKey: s.ProfileKey,
@@ -16,12 +16,31 @@ func subExists(s models.Subscription) bool {
 	return subDb.ProfileKey == s.ProfileKey && subDb.ApiName == s.ApiName
 }
 
-func SubsExistsFromToken(subToken string) bool {
+func SubsGetFromToken(subToken string) (models.Subscription, string, error) {
 	var subDb models.Subscription
 	api.Api.Database.Orm.Where(&models.Subscription{
 		AccessToken: subToken,
 	}).First(&subDb)
-	return subDb.AccessToken == subToken
+	if subDb.AccessToken == subToken {
+		return subDb, "sub checked", nil
+	} else {
+		msg := "no sub with this token"
+		return models.Subscription{}, msg, errors.New(msg)
+	}
+}
+
+func SubsGetFromApiName(apiName string, profileKey string) (models.Subscription, string, error) {
+	var subDb models.Subscription
+	api.Api.Database.Orm.Where(&models.Subscription{
+		ProfileKey: profileKey,
+		ApiName:    apiName,
+	}).First(&subDb)
+	if subDb.ApiName == apiName && subDb.ProfileKey == profileKey {
+		return subDb, "sub checked", nil
+	} else {
+		msg := "no sub with for this user and this api"
+		return models.Subscription{}, msg, errors.New(msg)
+	}
 }
 
 func SubsListFromProfile(p models.Profile) ([]models.Subscription, string, error) {
@@ -35,14 +54,14 @@ func SubsListFromProfile(p models.Profile) ([]models.Subscription, string, error
 
 // requires the fields sub.ProfileKey and sub.ApiName
 func SubsCreate(s models.Subscription) (models.Subscription, string, error) {
-	if subExists(s) {
+	if subExistsFromPkAndApiName(s) {
 		msg := fmt.Sprintf("existing sub for this user with api %s", s.ApiName)
 		return models.Subscription{}, msg, errors.New(msg)
 	}
 
 	api.Api.Database.Orm.Create(&s)
 
-	if !subExists(s) {
+	if !subExistsFromPkAndApiName(s) {
 		msg := "error subscribing"
 		return models.Subscription{}, msg, errors.New(msg)
 	}
@@ -52,14 +71,14 @@ func SubsCreate(s models.Subscription) (models.Subscription, string, error) {
 
 // requires the fields sub.ProfileKey and sub.ApiName
 func SubsDelete(s models.Subscription) (models.Subscription, string, error) {
-	if !subExists(s) {
+	if !subExistsFromPkAndApiName(s) {
 		msg := fmt.Sprintf("no sub found for this user with api %s", s.ApiName)
 		return models.Subscription{}, msg, errors.New(msg)
 	}
 
 	api.Api.Database.Orm.Delete(&s)
 
-	if subExists(s) {
+	if subExistsFromPkAndApiName(s) {
 		msg := "error deleting sub"
 		return models.Subscription{}, msg, errors.New(msg)
 	}

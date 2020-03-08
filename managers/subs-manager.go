@@ -24,8 +24,56 @@ func subsGenerateAccessToken() string {
 	return fmt.Sprintf("%x", hash.Sum(nil))
 }
 
-func SubsManagerExists(subToken string) (bool, string, error) {
-	return repositories.SubsExistsFromToken(subToken), "sub checked", nil
+func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, error) {
+	var s models.SubscriptionJson
+
+	subDb, msg, err := repositories.SubsGetFromToken(subToken)
+	if err != nil {
+		return s, msg, err
+	}
+
+	a, msg, err := repositories.ApiGet(subDb.ApiName)
+	if err != nil {
+		return s, msg, err
+	}
+
+	p, msg, err := repositories.ProfileGetFromKey(subDb.ProfileKey)
+	if err != nil {
+		return s, msg, err
+	}
+
+	return models.SubscriptionJson{
+		AccessToken:    subDb.AccessToken,
+		Profile:        models.NewProfileJson(p),
+		Api:            a,
+		DateSubscribed: subDb.DateSubscribed,
+	}, "sub checked", nil
+}
+
+func SubsManagerGetFromApiName(apiName string, profileKey string) (models.SubscriptionJson, string, error) {
+	var s models.SubscriptionJson
+
+	p, msg, err := repositories.ProfileGetFromKey(profileKey)
+	if err != nil {
+		return s, msg, err
+	}
+
+	a, msg, err := repositories.ApiGet(apiName)
+	if err != nil {
+		return s, msg, err
+	}
+
+	subDb, msg, err := repositories.SubsGetFromApiName(apiName, profileKey)
+	if err != nil {
+		return s, msg, err
+	}
+
+	return models.SubscriptionJson{
+		AccessToken:    subDb.ProfileKey,
+		Profile:        models.NewProfileJson(p),
+		Api:            a,
+		DateSubscribed: subDb.DateSubscribed,
+	}, "sub checked", nil
 }
 
 func SubsManagerList(profileKey string) ([]models.SubscriptionJson, string, error) {

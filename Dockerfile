@@ -14,6 +14,8 @@ ENV PASSWORD_DB=$ARG_PASSWORD_DB
 ENV JWT_SECRET=$ARG_JWT_SECRET
 ENV VERSION=$ARG_VERSION
 
+ENV CORS_ORIGIN=dadard.fr
+
 RUN apk add --update git gcc libc-dev openssl
 
 WORKDIR /go/src/app

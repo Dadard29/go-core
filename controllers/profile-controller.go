@@ -10,6 +10,8 @@ import (
 	"net/http"
 )
 
+const profileErrorMsg = "bad username/password"
+
 // POST
 // Authorization: 	Basic
 // Params: 			None
@@ -26,7 +28,7 @@ func ProfileSignUp(w http.ResponseWriter, r *http.Request) {
 	pk, message, err := managers.ProfileManagerSignUp(username, password)
 	if err != nil {
 		logger.Error(err.Error())
-		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, profileErrorMsg, w)
 		logger.CheckErr(err)
 	} else {
 		err := api.Api.BuildJsonResponse(true, message, pk, w)
@@ -48,7 +50,7 @@ func ProfileGet(w http.ResponseWriter, r *http.Request) {
 
 	profile, message, err := managers.ProfileManagerGet(profileKey)
 	if err != nil {
-		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, profileErrorMsg, w)
 		logger.CheckErr(err)
 		return
 	}
@@ -83,7 +85,7 @@ func ProfileChangePassword(w http.ResponseWriter, r *http.Request) {
 
 	profile, message, err := managers.ProfileManagerChangePassword(username, password, body.NewPassword)
 	if err != nil {
-		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, profileErrorMsg, w)
 		logger.CheckErr(err)
 		return
 	}
@@ -112,7 +114,7 @@ func ProfileDelete(w http.ResponseWriter, r *http.Request) {
 	profileDeleted, message, err := managers.ProfileManagerDelete(username, password)
 	if err != nil {
 		logger.Error(err.Error())
-		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, profileErrorMsg, w)
 		logger.CheckErr(err)
 		return
 	}

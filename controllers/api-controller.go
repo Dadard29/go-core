@@ -7,6 +7,24 @@ import (
 	"net/http"
 )
 
+func ApiListGet(w http.ResponseWriter, r *http.Request) {
+	if !checkJwt(r) {
+		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
+		return
+	}
+
+	apiList, message, err := managers.ApiManagerList()
+	if err != nil {
+		logger.Error(err.Error())
+		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		logger.CheckErr(err)
+		return
+	}
+
+	err = api.Api.BuildJsonResponse(true, message, apiList, w)
+	logger.CheckErr(err)
+}
+
 // GET
 // Authorization: 	JWT in header Authorization
 // Params: 			apiName
@@ -17,7 +35,14 @@ func ApiGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	apiList, message, err := managers.ApiManagerList()
+	apiName := r.URL.Query().Get("apiName")
+	if apiName == "" {
+		api.Api.BuildMissingParameter(w)
+		return
+	}
+
+
+	apiList, message, err := managers.ApiManagerGet(apiName)
 	if err != nil {
 		logger.Error(err.Error())
 		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
