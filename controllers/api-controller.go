@@ -41,7 +41,6 @@ func ApiGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-
 	apiList, message, err := managers.ApiManagerGet(apiName)
 	if err != nil {
 		logger.Error(err.Error())

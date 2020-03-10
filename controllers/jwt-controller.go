@@ -72,7 +72,7 @@ func JwtCreate(w http.ResponseWriter, r *http.Request) {
 // Params: 			None
 // Body: 			None
 func JwtValidate(w http.ResponseWriter, r *http.Request) {
-	if status:= managers.ValidateJwtCiphered(
+	if status := managers.ValidateJwtCiphered(
 		r.Header.Get(config.AuthorizationHeader)); status == nil {
 		err := api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
 		logger.CheckErr(err)

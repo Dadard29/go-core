@@ -38,7 +38,7 @@ func SubsGetFromApiName(apiName string, profileKey string) (models.Subscription,
 	if subDb.ApiName == apiName && subDb.ProfileKey == profileKey {
 		return subDb, "sub checked", nil
 	} else {
-		msg := "no sub with for this user and this api"
+		msg := "no sub with for this user and the api " + apiName
 		return models.Subscription{}, msg, errors.New(msg)
 	}
 }

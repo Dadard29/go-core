@@ -25,9 +25,9 @@ const (
 )
 
 const (
-	Session = "session"
-	SessionAuth = "auth"
-	SessionAuthUsernameKey = "usernameKey"
+	Session                 = "session"
+	SessionAuth             = "auth"
+	SessionAuthUsernameKey  = "usernameKey"
 	SessionAuthUPasswordKey = "passwordKey"
 )
 

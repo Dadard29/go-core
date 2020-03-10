@@ -62,7 +62,7 @@ func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
 		s, message, err = managers.SubsManagerGetFromToken(subToken)
 	} else if apiName != "" {
 		s, message, err = managers.SubsManagerGetFromApiName(apiName, profileKey)
-	}  else {
+	} else {
 		api.Api.BuildMissingParameter(w)
 		return
 	}

@@ -85,7 +85,7 @@ func ProfileChangePassword(w http.ResponseWriter, r *http.Request) {
 
 	profile, message, err := managers.ProfileManagerChangePassword(username, password, body.NewPassword)
 	if err != nil {
-		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, profileErrorMsg, w)
+		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
 		logger.CheckErr(err)
 		return
 	}

@@ -47,7 +47,7 @@ func ProfileManagerSignUp(username string, password string) (models.ProfileJson,
 	p.DateCreated = dateCreated
 
 	profileDb, msg, err := repositories.ProfileCreate(p)
-	if err !=  nil {
+	if err != nil {
 		logger.Error(err.Error())
 		return models.ProfileJson{}, msg, errors.New(msg)
 	}

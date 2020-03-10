@@ -97,7 +97,7 @@ func SubsManagerList(profileKey string) ([]models.SubscriptionJson, string, erro
 		}
 
 		subListJson = append(subListJson, models.SubscriptionJson{
-			AccessToken: 	sub.AccessToken,
+			AccessToken:    sub.AccessToken,
 			Profile:        models.NewProfileJson(p),
 			Api:            a,
 			DateSubscribed: sub.DateSubscribed,
@@ -119,7 +119,7 @@ func SubsManagerCreate(profileKey string, apiName string) (models.SubscriptionJs
 	if err != nil {
 		return s, msg, err
 	}
-	
+
 	subDb, msg, err := repositories.SubsCreate(models.Subscription{
 		AccessToken:    subsGenerateAccessToken(),
 		ProfileKey:     p.ProfileKey,
@@ -131,7 +131,7 @@ func SubsManagerCreate(profileKey string, apiName string) (models.SubscriptionJs
 	}
 
 	subJson := models.SubscriptionJson{
-		AccessToken: 	subDb.AccessToken,
+		AccessToken:    subDb.AccessToken,
 		Profile:        models.NewProfileJson(p),
 		Api:            a,
 		DateSubscribed: subDb.DateSubscribed,
@@ -162,7 +162,7 @@ func SubsManagerDelete(profileKey string, apiName string) (models.SubscriptionJs
 	}
 
 	subJson := models.SubscriptionJson{
-		AccessToken: 	subDb.AccessToken,
+		AccessToken:    subDb.AccessToken,
 		Profile:        models.NewProfileJson(p),
 		Api:            a,
 		DateSubscribed: subDb.DateSubscribed,

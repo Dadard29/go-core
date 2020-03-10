@@ -13,49 +13,49 @@ import (
 //var routes = map[string]func(w http.ResponseWriter, r *http.Request) {
 var routes = service.RouteMapping{
 	"/notification/bot/webhook": {
-		Description:   "manage notifications from webhooks",
-		MethodMapping: service.MethodMapping {
+		Description: "manage notifications from webhooks",
+		MethodMapping: service.MethodMapping{
 			http.MethodPost: controllers.NotificationBotWebookRoute,
 		},
 	},
 	"/profile/auth/jwt": {
-		Description:   "manage the web tokens",
+		Description: "manage the web tokens",
 		MethodMapping: service.MethodMapping{
 			http.MethodPost: controllers.JwtCreate,
-			http.MethodGet: controllers.JwtValidate,
+			http.MethodGet:  controllers.JwtValidate,
 		},
 	},
 	"/profile/auth": {
-		Description:   "manage the profile DB object",
+		Description: "manage the profile DB object",
 		MethodMapping: service.MethodMapping{
-			http.MethodPost: controllers.ProfileSignUp,
-			http.MethodGet: controllers.ProfileGet,
-			http.MethodPut: controllers.ProfileChangePassword,
+			http.MethodPost:   controllers.ProfileSignUp,
+			http.MethodGet:    controllers.ProfileGet,
+			http.MethodPut:    controllers.ProfileChangePassword,
 			http.MethodDelete: controllers.ProfileDelete,
 		},
 	},
 	"/api": {
-		Description:   "manage the APIs DB objects",
+		Description: "manage the APIs DB objects",
 		MethodMapping: service.MethodMapping{
 			http.MethodGet: controllers.ApiGet,
 		},
 	},
 	"/api/list": {
-		Description:   "list the APIs DB objects",
+		Description: "list the APIs DB objects",
 		MethodMapping: service.MethodMapping{
 			http.MethodGet: controllers.ApiListGet,
 		},
 	},
 	"/subs": {
-		Description:   "manage the subscriptions DB objects",
+		Description: "manage the subscriptions DB objects",
 		MethodMapping: service.MethodMapping{
-			http.MethodPost: controllers.Subscribe,
-			http.MethodGet: controllers.SubsCheckExists,
+			http.MethodPost:   controllers.Subscribe,
+			http.MethodGet:    controllers.SubsCheckExists,
 			http.MethodDelete: controllers.Unsubscribe,
 		},
 	},
 	"/subs/list": {
-		Description:   "manage the subscriptions list",
+		Description: "manage the subscriptions list",
 		MethodMapping: service.MethodMapping{
 			http.MethodGet: controllers.SubsList,
 		},
