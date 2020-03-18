@@ -2,7 +2,6 @@ image: docker:stable
 stages:
   - build
   - deploy
-  - update_proxy
 
 services:
   - docker:dind

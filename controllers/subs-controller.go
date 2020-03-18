@@ -59,7 +59,7 @@ func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
 		api.Api.BuildErrorResponse(http.StatusBadRequest, "args overload", w)
 		return
 	} else if subToken != "" {
-		s, message, err = managers.SubsManagerGetFromToken(subToken)
+		s, message, err = managers.SubsManagerGetFromToken(subToken, profileKey)
 	} else if apiName != "" {
 		s, message, err = managers.SubsManagerGetFromApiName(apiName, profileKey)
 	} else {

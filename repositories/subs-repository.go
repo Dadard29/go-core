@@ -16,15 +16,16 @@ func subExistsFromPkAndApiName(s models.Subscription) bool {
 	return subDb.ProfileKey == s.ProfileKey && subDb.ApiName == s.ApiName
 }
 
-func SubsGetFromToken(subToken string) (models.Subscription, string, error) {
+func SubsGetFromPkAndToken(subToken string, profileKey string) (models.Subscription, string, error) {
 	var subDb models.Subscription
 	api.Api.Database.Orm.Where(&models.Subscription{
 		AccessToken: subToken,
+		ProfileKey: profileKey,
 	}).First(&subDb)
 	if subDb.AccessToken == subToken {
 		return subDb, "sub checked", nil
 	} else {
-		msg := "no sub with this token"
+		msg := "no sub for this user with this token"
 		return models.Subscription{}, msg, errors.New(msg)
 	}
 }
@@ -70,18 +71,26 @@ func SubsCreate(s models.Subscription) (models.Subscription, string, error) {
 }
 
 // requires the fields sub.ProfileKey and sub.ApiName
-func SubsDelete(s models.Subscription) (models.Subscription, string, error) {
-	if !subExistsFromPkAndApiName(s) {
-		msg := fmt.Sprintf("no sub found for this user with api %s", s.ApiName)
+func SubsDelete(profileKey string, apiName string) (models.Subscription, string, error) {
+	if !subExistsFromPkAndApiName(models.Subscription{
+		ProfileKey: profileKey,
+		ApiName:    apiName,
+	}) {
+		msg := fmt.Sprintf("no sub found for this user with api %s", apiName)
 		return models.Subscription{}, msg, errors.New(msg)
 	}
 
-	api.Api.Database.Orm.Delete(&s)
+	sDelete, msg, err := SubsGetFromApiName(apiName, profileKey)
+	if err != nil {
+		return models.Subscription{}, msg, err
+	}
 
-	if subExistsFromPkAndApiName(s) {
+	api.Api.Database.Orm.Delete(&sDelete)
+
+	if subExistsFromPkAndApiName(sDelete) {
 		msg := "error deleting sub"
 		return models.Subscription{}, msg, errors.New(msg)
 	}
 
-	return s, "sub deleted", nil
+	return sDelete, "sub deleted", nil
 }
