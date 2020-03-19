@@ -41,7 +41,7 @@ func JwtCreate(w http.ResponseWriter, r *http.Request) {
 	// create token
 	token, err := auth.NewJwtHS256(
 		secret,
-		"core", "", []string{"http://dadard.fr"}, config.JwtValidityDuration,
+		"core", "", []string{"https://dadard.fr"}, config.JwtValidityDuration,
 		pl)
 	if err != nil {
 		logger.Error(err.Error())

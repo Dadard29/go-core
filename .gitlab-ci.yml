@@ -22,7 +22,7 @@ deploy:
   stage: deploy
   script:
     - apk add --update curl wget
-    - wget http://git.dadard.fr/dadard/scripts/raw/branch/master/deploy.sh
+    - wget https://git.dadard.fr/dadard/scripts/raw/branch/master/deploy.sh
     - export CONTAINER_NAME
     - export IMAGE_NAME
     - export POD_NAME
