@@ -9,7 +9,7 @@ type ApiModel struct {
 	Hostname         string     `gorm:"type:varchar(70);index:hostname"`
 	VCSUrl           string     `gorm:"type:varchar(70);index:vcs_url"`
 	BuildUrl         string     `gorm:"type:varchar(70);index:build_url"`
-	IconUrl          string     `gorm:"type:varchar(70);index:icon_url"`
+	IconUrl          string     `gorm:"type:varchar(100);index:icon_url"`
 	Image            string     `gorm:"type:varchar(70);index:image"`
 	CreationDate     *time.Time `gorm:"type:date;index:creation_date"`
 	IsStandard       bool       `gorm:"type:bool;index:is_standard"`
