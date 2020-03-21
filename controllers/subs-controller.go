@@ -33,17 +33,11 @@ func SubsList(w http.ResponseWriter, r *http.Request) {
 }
 
 // GET
-// Authorization: 	JWT in header Authorization
-// Params: 			accessToken
+// Authorization: 	JWT in header Authorization (if request with apiName parameter only)
+// Params: 			accessToken or apiName
 // Body: 			None
 func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
-	// auth
 	var err error
-	profileKey, err := getProfileKey(r)
-	if err != nil {
-		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
-		return
-	}
 
 	subToken := r.URL.Query().Get("accessToken")
 	apiName := r.URL.Query().Get("apiName")
@@ -59,18 +53,31 @@ func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
 		api.Api.BuildErrorResponse(http.StatusBadRequest, "args overload", w)
 		return
 	} else if subToken != "" {
-		s, message, err = managers.SubsManagerGetFromToken(subToken, profileKey)
+		s, message, err = managers.SubsManagerGetFromToken(subToken)
+		if err != nil {
+			logger.Error(err.Error())
+			err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
+			logger.CheckErr(err)
+			return
+		}
+
 	} else if apiName != "" {
+		profileKey, err := getProfileKey(r)
+		if err != nil {
+			api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
+			return
+		}
+
 		s, message, err = managers.SubsManagerGetFromApiName(apiName, profileKey)
+		if err != nil {
+			logger.Error(err.Error())
+			err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
+			logger.CheckErr(err)
+			return
+		}
+
 	} else {
 		api.Api.BuildMissingParameter(w)
-		return
-	}
-
-	if err != nil {
-		logger.Error(err.Error())
-		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
-		logger.CheckErr(err)
 		return
 	}
 

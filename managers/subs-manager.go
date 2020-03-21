@@ -24,15 +24,10 @@ func subsGenerateAccessToken() string {
 	return fmt.Sprintf("%x", hash.Sum(nil))
 }
 
-func SubsManagerGetFromToken(subToken string, profileKey string) (models.SubscriptionJson, string, error) {
+func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, error) {
 	var s models.SubscriptionJson
 
-	p, msg, err := repositories.ProfileGetFromKey(profileKey)
-	if err != nil {
-		return s, msg, err
-	}
-
-	subDb, msg, err := repositories.SubsGetFromPkAndToken(subToken, p.ProfileKey)
+	subDb, msg, err := repositories.SubsGetFromPkAndToken(subToken)
 	if err != nil {
 		return s, msg, err
 	}
@@ -42,10 +37,8 @@ func SubsManagerGetFromToken(subToken string, profileKey string) (models.Subscri
 		return s, msg, err
 	}
 
-
 	return models.SubscriptionJson{
 		AccessToken:    subDb.AccessToken,
-		Profile:        models.NewProfileJson(p),
 		Api:            a,
 		DateSubscribed: subDb.DateSubscribed,
 	}, "sub checked", nil
@@ -53,11 +46,6 @@ func SubsManagerGetFromToken(subToken string, profileKey string) (models.Subscri
 
 func SubsManagerGetFromApiName(apiName string, profileKey string) (models.SubscriptionJson, string, error) {
 	var s models.SubscriptionJson
-
-	p, msg, err := repositories.ProfileGetFromKey(profileKey)
-	if err != nil {
-		return s, msg, err
-	}
 
 	a, msg, err := repositories.ApiGet(apiName)
 	if err != nil {
@@ -71,7 +59,6 @@ func SubsManagerGetFromApiName(apiName string, profileKey string) (models.Subscr
 
 	return models.SubscriptionJson{
 		AccessToken:    subDb.AccessToken,
-		Profile:        models.NewProfileJson(p),
 		Api:            a,
 		DateSubscribed: subDb.DateSubscribed,
 	}, "sub checked", nil
@@ -99,7 +86,6 @@ func SubsManagerList(profileKey string) ([]models.SubscriptionJson, string, erro
 
 		subListJson = append(subListJson, models.SubscriptionJson{
 			AccessToken:    sub.AccessToken,
-			Profile:        models.NewProfileJson(p),
 			Api:            a,
 			DateSubscribed: sub.DateSubscribed,
 		})
@@ -133,7 +119,6 @@ func SubsManagerCreate(profileKey string, apiName string) (models.SubscriptionJs
 
 	subJson := models.SubscriptionJson{
 		AccessToken:    subDb.AccessToken,
-		Profile:        models.NewProfileJson(p),
 		Api:            a,
 		DateSubscribed: subDb.DateSubscribed,
 	}
@@ -161,7 +146,6 @@ func SubsManagerDelete(profileKey string, apiName string) (models.SubscriptionJs
 
 	subJson := models.SubscriptionJson{
 		AccessToken:    subDb.AccessToken,
-		Profile:        models.NewProfileJson(p),
 		Api:            a,
 		DateSubscribed: subDb.DateSubscribed,
 	}

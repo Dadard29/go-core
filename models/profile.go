@@ -73,7 +73,6 @@ type Subscription struct {
 
 type SubscriptionJson struct {
 	AccessToken    string
-	Profile        ProfileJson
 	Api            ApiModel
 	DateSubscribed time.Time
 }

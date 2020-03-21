@@ -16,11 +16,10 @@ func subExistsFromPkAndApiName(s models.Subscription) bool {
 	return subDb.ProfileKey == s.ProfileKey && subDb.ApiName == s.ApiName
 }
 
-func SubsGetFromPkAndToken(subToken string, profileKey string) (models.Subscription, string, error) {
+func SubsGetFromPkAndToken(subToken string) (models.Subscription, string, error) {
 	var subDb models.Subscription
 	api.Api.Database.Orm.Where(&models.Subscription{
 		AccessToken: subToken,
-		ProfileKey: profileKey,
 	}).First(&subDb)
 	if subDb.AccessToken == subToken {
 		return subDb, "sub checked", nil
