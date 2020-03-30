@@ -93,3 +93,10 @@ func SubsDelete(profileKey string, apiName string) (models.Subscription, string,
 
 	return sDelete, "sub deleted", nil
 }
+
+func SubsUpdateRequestCount(subscription models.Subscription) (models.Subscription, string, error) {
+	subscription.RequestCount += 1
+	api.Api.Database.Orm.Save(subscription)
+
+	return subscription, "request count incremented", nil
+}

@@ -32,15 +32,21 @@ func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, 
 		return s, msg, err
 	}
 
-	a, msg, err := repositories.ApiGet(subDb.ApiName)
+	newSubDb, msg, err := repositories.SubsUpdateRequestCount(subDb)
+	if err != nil {
+		return s, msg, err
+	}
+
+	a, msg, err := repositories.ApiGet(newSubDb.ApiName)
 	if err != nil {
 		return s, msg, err
 	}
 
 	return models.SubscriptionJson{
-		AccessToken:    subDb.AccessToken,
+		AccessToken:    newSubDb.AccessToken,
 		Api:            a,
-		DateSubscribed: subDb.DateSubscribed,
+		DateSubscribed: newSubDb.DateSubscribed,
+		RequestCount: newSubDb.RequestCount,
 	}, "sub checked", nil
 }
 
@@ -88,6 +94,7 @@ func SubsManagerList(profileKey string) ([]models.SubscriptionJson, string, erro
 			AccessToken:    sub.AccessToken,
 			Api:            a,
 			DateSubscribed: sub.DateSubscribed,
+			RequestCount: sub.RequestCount,
 		})
 	}
 

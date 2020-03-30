@@ -53,6 +53,7 @@ func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
 		api.Api.BuildErrorResponse(http.StatusBadRequest, "args overload", w)
 		return
 	} else if subToken != "" {
+		// record token usage
 		s, message, err = managers.SubsManagerGetFromToken(subToken)
 		if err != nil {
 			logger.Error(err.Error())
