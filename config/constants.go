@@ -19,9 +19,12 @@ const (
 )
 
 const (
-	Profile             = "profile"
-	ProfileJwt          = "jwt"
-	ProfileJwtSecretKey = "secretKey"
+	Profile               = "profile"
+	ProfileJwt            = "jwt"
+	ProfileJwtSecretKey   = "secretKey"
+	ProfileQuota          = "quota"
+	ProfileQuotaSilver    = "silver"
+	ProfileQuotaNotSilver = "notSilver"
 )
 
 const (

@@ -25,6 +25,10 @@
   "profile": {
     "jwt": {
       "secretKey": "JWT_SECRET"
+    },
+    "quota": {
+      "notSilver": "10000",
+      "silver": "100000"
     }
   },
   "session": {

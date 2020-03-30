@@ -2,7 +2,10 @@ package managers
 
 import (
 	"crypto/sha256"
+	"errors"
 	"fmt"
+	"github.com/Dadard29/go-core/api"
+	"github.com/Dadard29/go-core/config"
 	"github.com/Dadard29/go-core/models"
 	"github.com/Dadard29/go-core/repositories"
 	"math/rand"
@@ -24,6 +27,37 @@ func subsGenerateAccessToken() string {
 	return fmt.Sprintf("%x", hash.Sum(nil))
 }
 
+func getQuota(profile models.Profile) (int, error) {
+	var quotaStr string
+	var err error
+	if profile.Silver {
+		quotaStr, err = api.Api.Config.GetValueFromFile(
+			config.Profile,
+			config.ProfileQuota,
+			config.ProfileQuotaSilver)
+
+		if err != nil {
+			return 0, err
+		}
+	} else {
+		quotaStr, err = api.Api.Config.GetValueFromFile(
+			config.Profile,
+			config.ProfileQuota,
+			config.ProfileQuotaNotSilver)
+
+		if err != nil {
+			return 0, err
+		}
+	}
+
+	quota, err := strconv.Atoi(quotaStr)
+	if err != nil {
+		return 0, err
+	}
+
+	return quota, nil
+}
+
 func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, error) {
 	var s models.SubscriptionJson
 
@@ -32,12 +66,20 @@ func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, 
 		return s, msg, err
 	}
 
-	_, msg, err = repositories.ProfileGetFromKey(subDb.ProfileKey)
+	profile, msg, err := repositories.ProfileGetFromKey(subDb.ProfileKey)
 	if err != nil {
 		return s, msg, err
 	}
 
-	// check quota
+	quota, err := getQuota(profile)
+	if err != nil {
+		return s, "error getting quota", err
+	}
+
+	if subDb.RequestCount >= quota {
+		msg := fmt.Sprintf("quota (%d) reached", quota)
+		return s, msg, errors.New(msg)
+	}
 
 	newSubDb, msg, err := repositories.SubsUpdateRequestCount(subDb)
 	if err != nil {
@@ -54,6 +96,7 @@ func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, 
 		Api:            a,
 		DateSubscribed: newSubDb.DateSubscribed,
 		RequestCount:   newSubDb.RequestCount,
+		Quota:          quota,
 	}, "sub checked", nil
 }
 
@@ -63,6 +106,16 @@ func SubsManagerGetFromApiName(apiName string, profileKey string) (models.Subscr
 	a, msg, err := repositories.ApiGet(apiName)
 	if err != nil {
 		return s, msg, err
+	}
+
+	profile, msg, err := repositories.ProfileGetFromKey(profileKey)
+	if err != nil {
+		return s, msg, err
+	}
+
+	quota, err := getQuota(profile)
+	if err != nil {
+		return s, "error getting quota", err
 	}
 
 	subDb, msg, err := repositories.SubsGetFromApiName(apiName, profileKey)
@@ -75,6 +128,7 @@ func SubsManagerGetFromApiName(apiName string, profileKey string) (models.Subscr
 		Api:            a,
 		DateSubscribed: subDb.DateSubscribed,
 		RequestCount:   subDb.RequestCount,
+		Quota:          quota,
 	}, "sub checked", nil
 }
 
@@ -84,6 +138,11 @@ func SubsManagerList(profileKey string) ([]models.SubscriptionJson, string, erro
 	p, msg, err := repositories.ProfileGetFromKey(profileKey)
 	if err != nil {
 		return s, msg, err
+	}
+
+	quota, err := getQuota(p)
+	if err != nil {
+		return s, "error getting quota", err
 	}
 
 	subDb, msg, err := repositories.SubsListFromProfile(p)
@@ -103,6 +162,7 @@ func SubsManagerList(profileKey string) ([]models.SubscriptionJson, string, erro
 			Api:            a,
 			DateSubscribed: sub.DateSubscribed,
 			RequestCount:   sub.RequestCount,
+			Quota:          quota,
 		})
 	}
 
@@ -115,6 +175,11 @@ func SubsManagerCreate(profileKey string, apiName string) (models.SubscriptionJs
 	p, msg, err := repositories.ProfileGetFromKey(profileKey)
 	if err != nil {
 		return s, msg, err
+	}
+
+	quota, err := getQuota(p)
+	if err != nil {
+		return s, "error getting quota", err
 	}
 
 	a, msg, err := repositories.ApiGet(apiName)
@@ -136,6 +201,8 @@ func SubsManagerCreate(profileKey string, apiName string) (models.SubscriptionJs
 		AccessToken:    subDb.AccessToken,
 		Api:            a,
 		DateSubscribed: subDb.DateSubscribed,
+		RequestCount:   subDb.RequestCount,
+		Quota:          quota,
 	}
 
 	return subJson, msg, nil
@@ -147,6 +214,11 @@ func SubsManagerDelete(profileKey string, apiName string) (models.SubscriptionJs
 	p, msg, err := repositories.ProfileGetFromKey(profileKey)
 	if err != nil {
 		return s, msg, err
+	}
+
+	quota, err := getQuota(p)
+	if err != nil {
+		return s, "error getting quota", err
 	}
 
 	a, msg, err := repositories.ApiGet(apiName)
@@ -163,6 +235,8 @@ func SubsManagerDelete(profileKey string, apiName string) (models.SubscriptionJs
 		AccessToken:    subDb.AccessToken,
 		Api:            a,
 		DateSubscribed: subDb.DateSubscribed,
+		RequestCount:   subDb.RequestCount,
+		Quota:          quota,
 	}
 
 	return subJson, msg, nil

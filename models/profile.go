@@ -80,6 +80,7 @@ type SubscriptionJson struct {
 	Api            ApiModel
 	DateSubscribed time.Time
 	RequestCount   int
+	Quota          int
 }
 
 func (Subscription) TableName() string {
