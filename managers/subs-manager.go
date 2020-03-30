@@ -67,6 +67,7 @@ func SubsManagerGetFromApiName(apiName string, profileKey string) (models.Subscr
 		AccessToken:    subDb.AccessToken,
 		Api:            a,
 		DateSubscribed: subDb.DateSubscribed,
+		RequestCount: subDb.RequestCount,
 	}, "sub checked", nil
 }
 
