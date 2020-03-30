@@ -32,6 +32,13 @@ func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, 
 		return s, msg, err
 	}
 
+	_, msg, err = repositories.ProfileGetFromKey(subDb.ProfileKey)
+	if err != nil {
+		return s, msg, err
+	}
+
+	// check quota
+
 	newSubDb, msg, err := repositories.SubsUpdateRequestCount(subDb)
 	if err != nil {
 		return s, msg, err

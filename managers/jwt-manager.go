@@ -8,12 +8,7 @@ import (
 )
 
 func GetJwtSecret() string {
-	jwtSecretKey, err := api.Api.Config.GetValueFromFile(
-		config.Profile,
-		config.ProfileJwt,
-		config.ProfileJwtSecretKey)
-
-	logger.CheckErrFatal(err)
+	jwtSecretKey := "JWT_SECRET"
 
 	secret := api.Api.Config.GetEnv(jwtSecretKey)
 	if secret == "" {

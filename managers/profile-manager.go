@@ -45,6 +45,7 @@ func ProfileManagerSignUp(username string, password string) (models.ProfileJson,
 
 	p.PasswordEncrypt = hash
 	p.DateCreated = dateCreated
+	p.Silver = false
 
 	profileDb, msg, err := repositories.ProfileCreate(p)
 	if err != nil {

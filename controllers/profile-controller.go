@@ -25,13 +25,13 @@ func ProfileSignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pk, message, err := managers.ProfileManagerSignUp(username, password)
+	profile, message, err := managers.ProfileManagerSignUp(username, password)
 	if err != nil {
 		logger.Error(err.Error())
 		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, profileErrorMsg, w)
 		logger.CheckErr(err)
 	} else {
-		err := api.Api.BuildJsonResponse(true, message, pk, w)
+		err := api.Api.BuildJsonResponse(true, message, profile, w)
 		logger.CheckErr(err)
 	}
 }
@@ -55,11 +55,7 @@ func ProfileGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = api.Api.BuildJsonResponse(true, message, models.ProfileJson{
-		ProfileKey:  profile.ProfileKey,
-		Username:    profile.Username,
-		DateCreated: profile.DateCreated,
-	}, w)
+	err = api.Api.BuildJsonResponse(true, message, profile, w)
 	logger.CheckErr(err)
 }
 
@@ -90,11 +86,7 @@ func ProfileChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = api.Api.BuildJsonResponse(true, message, models.ProfileJson{
-		ProfileKey:  profile.ProfileKey,
-		Username:    profile.Username,
-		DateCreated: profile.DateCreated,
-	}, w)
+	err = api.Api.BuildJsonResponse(true, message, profile, w)
 	logger.CheckErr(err)
 }
 
@@ -119,10 +111,6 @@ func ProfileDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = api.Api.BuildJsonResponse(true, message, models.ProfileJson{
-		ProfileKey:  profileDeleted.ProfileKey,
-		Username:    profileDeleted.Username,
-		DateCreated: profileDeleted.DateCreated,
-	}, w)
+	err = api.Api.BuildJsonResponse(true, message, profileDeleted, w)
 	logger.CheckErr(err)
 }
