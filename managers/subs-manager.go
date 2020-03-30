@@ -53,7 +53,7 @@ func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, 
 		AccessToken:    newSubDb.AccessToken,
 		Api:            a,
 		DateSubscribed: newSubDb.DateSubscribed,
-		RequestCount: newSubDb.RequestCount,
+		RequestCount:   newSubDb.RequestCount,
 	}, "sub checked", nil
 }
 
@@ -74,7 +74,7 @@ func SubsManagerGetFromApiName(apiName string, profileKey string) (models.Subscr
 		AccessToken:    subDb.AccessToken,
 		Api:            a,
 		DateSubscribed: subDb.DateSubscribed,
-		RequestCount: subDb.RequestCount,
+		RequestCount:   subDb.RequestCount,
 	}, "sub checked", nil
 }
 
@@ -102,7 +102,7 @@ func SubsManagerList(profileKey string) ([]models.SubscriptionJson, string, erro
 			AccessToken:    sub.AccessToken,
 			Api:            a,
 			DateSubscribed: sub.DateSubscribed,
-			RequestCount: sub.RequestCount,
+			RequestCount:   sub.RequestCount,
 		})
 	}
 

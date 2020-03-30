@@ -13,7 +13,7 @@ type ApiModel struct {
 	Image            string     `gorm:"type:varchar(70);index:image"`
 	CreationDate     *time.Time `gorm:"type:date;index:creation_date"`
 	IsStandard       bool       `gorm:"type:bool;index:is_standard"`
-	Restricted bool `gorm:"type:bool;index:restricted"`
+	Restricted       bool       `gorm:"type:bool;index:restricted"`
 }
 
 func (ApiModel) TableName() string {
