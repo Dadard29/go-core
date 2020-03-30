@@ -14,6 +14,7 @@ type Profile struct {
 	Username        string    `gorm:"type:varchar(70);index:username"`
 	PasswordEncrypt string    `gorm:"type:varchar(70);index:password_encrypt"`
 	DateCreated     time.Time `gorm:"type:date;index:date_created"`
+	Silver bool `gorm:"type:bool;index:silver"`
 }
 
 type ProfileChangePassword struct {
@@ -24,6 +25,7 @@ type ProfileJson struct {
 	ProfileKey  string
 	Username    string
 	DateCreated time.Time
+	Silver bool
 }
 
 func NewProfileJson(p Profile) ProfileJson {
@@ -31,6 +33,7 @@ func NewProfileJson(p Profile) ProfileJson {
 		ProfileKey:  p.ProfileKey,
 		Username:    p.Username,
 		DateCreated: p.DateCreated,
+		Silver: p.Silver,
 	}
 }
 
