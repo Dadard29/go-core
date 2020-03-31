@@ -81,7 +81,7 @@ func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, 
 		return s, msg, errors.New(msg)
 	}
 
-	newSubDb, msg, err := repositories.SubsUpdateRequestCount(subDb)
+	newSubDb, msg, err := repositories.SubsUpdateRequestCount(&subDb)
 	if err != nil {
 		return s, msg, err
 	}
@@ -185,6 +185,11 @@ func SubsManagerCreate(profileKey string, apiName string) (models.SubscriptionJs
 	a, msg, err := repositories.ApiGet(apiName)
 	if err != nil {
 		return s, msg, err
+	}
+
+	if p.Silver != true && a.Restricted {
+		msg := "you need to be silver labelled to access restricted APIs"
+		return s, msg, errors.New(msg)
 	}
 
 	subDb, msg, err := repositories.SubsCreate(models.Subscription{
