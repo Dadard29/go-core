@@ -10,20 +10,77 @@ import (
 	"net/http"
 )
 
-const profileErrorMsg = "bad username/password"
+const (
+	profileErrorMsg = "bad username/password"
+
+	signUpWayKey = "confirm_by"
+	signUpWayTelegram = "telegram"
+	signUpWayEmail = "email"
+
+	emailKey = "email"
+	telegramIdKey = "telegram_id"
+)
 
 // POST
 // Authorization: 	Basic
-// Params: 			None
+// Params: 			confirm_by, <address or id...>
 // Body: 			None
+
+// ask for account creation, confirmation done by using confirm_by specified way
 func ProfileSignUp(w http.ResponseWriter, r *http.Request) {
 	username, password, err := auth.ParseBasicAuth(r)
 	if err != nil {
 		logger.Error(err.Error())
-		err := api.Api.BuildErrorResponse(http.StatusUnauthorized, "wrong auth format", w)
-		logger.CheckErr(err)
+		api.Api.BuildErrorResponse(http.StatusUnauthorized, "wrong auth format", w)
 		return
 	}
+
+	way := r.URL.Query().Get(signUpWayKey)
+	if way == signUpWayEmail {
+		// send ask for confirmation by mail
+		email := r.URL.Query().Get(emailKey)
+		msg, err := managers.ProfileManagerSendConfirmationMail(username, password, email)
+		if err != nil {
+			logger.Error(err.Error())
+			api.Api.BuildErrorResponse(http.StatusInternalServerError, msg, w)
+			return
+		}
+
+	} else if way == signUpWayTelegram {
+		// send ask for confirmation with telegram
+		telegramId := r.URL.Query().Get(telegramIdKey)
+		msg, err := managers.ProfileManagerSendConfirmationTelegram(username, password, telegramId)
+		if err != nil {
+			logger.Error(err.Error())
+			api.Api.BuildErrorResponse(http.StatusInternalServerError, msg, w)
+			return
+		}
+
+	} else {
+		api.Api.BuildErrorResponse(http.StatusBadRequest, "confirmation way not found", w)
+		return
+	}
+}
+
+// GET
+// Authorization: 	Basic
+// Params: 			confirmation_code
+// Body: 			None
+func ProfileSignUpConfirm(w http.ResponseWriter, r *http.Request) {
+	username, password, err := auth.ParseBasicAuth(r)
+	if err != nil {
+		logger.Error(err.Error())
+		api.Api.BuildErrorResponse(http.StatusUnauthorized, "wrong auth format", w)
+		return
+	}
+
+	confirmationCode := r.URL.Query().Get("confirmation_code")
+	if confirmationCode == "" {
+		api.Api.BuildErrorResponse(http.StatusBadRequest, "missing parameter", w)
+		return
+	}
+
+	// confirm the code
 
 	profile, message, err := managers.ProfileManagerSignUp(username, password)
 	if err != nil {
