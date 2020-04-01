@@ -2,14 +2,12 @@ package repositories
 
 import (
 	"fmt"
-	"github.com/Dadard29/go-core/api"
-	"github.com/Dadard29/go-core/config"
 	"github.com/Dadard29/go-core/connectors"
 	"github.com/Dadard29/go-core/models"
 )
 
 func NotificationBotWebookRepository(webhook models.GitlabWebhookPipeline) (bool, string) {
-	telegram, err := connectors.NewTelegramConnector()
+	telegram, err := connectors.NewCITelegramConnector()
 	logger.CheckErrFatal(err)
 
 	projectName := webhook.Project.Name
@@ -28,25 +26,13 @@ func NotificationBotWebookRepository(webhook models.GitlabWebhookPipeline) (bool
 	messageFormat := fmt.Sprintf(message,
 		projectName, projectUrl, pipelineStatus, createdAt, user, pipelineDuration)
 
-	chatId, err := api.Api.Config.GetValueFromFile(
-		config.Connectors,
-		config.ConnectorsTelegram,
-		config.ConnectorsTelegramContinuousIntegrationChatId)
-
 	if err != nil {
 		return false, err.Error()
 	}
 
-	parseMode, err := api.Api.Config.GetValueFromFile(
-		config.Connectors,
-		config.ConnectorsTelegram,
-		config.ConnectorsTelegramParseModeMarkdown)
+	parseMode := connectors.ParseModeMarkdown
 
-	if err != nil {
-		return false, err.Error()
-	}
-
-	err = telegram.SendMessage(messageFormat, chatId, parseMode)
+	err = telegram.SendMessage(messageFormat, parseMode)
 	if err != nil {
 		return false, err.Error()
 	}

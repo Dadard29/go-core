@@ -29,6 +29,9 @@
     "quota": {
       "notSilver": "50",
       "silver": "100"
+    },
+    "creation": {
+      "confirmationExpirationDuration": "300"
     }
   },
   "session": {
@@ -43,14 +46,10 @@
     }
   },
   "connectors": {
-    "telegram": {
-      "botTokenKey": "BOT_TOKEN",
-      "apiUrlSendMessage": "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s&parse_mode=%s",
-      "parseModeMarkdown": "Markdown",
-      "parseModeHTML": "HTML",
-      "monitoringChatId": "-393259181",
-      "continuousIntegrationChatId": "-325844941",
-      "privateChatId": "518425658"
-    }
+    "bot-std": "STD_BOT_TOKEN",
+    "bot-ci": "CI_BOT_TOKEN",
+    "chat-monitoring": "-393259181",
+    "chat-ci": "-325844941",
+    "chat-private": "518425658"
   }
 }

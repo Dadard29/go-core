@@ -25,6 +25,8 @@ const (
 	ProfileQuota          = "quota"
 	ProfileQuotaSilver    = "silver"
 	ProfileQuotaNotSilver = "notSilver"
+	ProfileCreation = "creation"
+	ProfileCreationConfirmationExpirationDuration = "confirmationExpirationDuration"
 )
 
 const (
@@ -37,11 +39,11 @@ const (
 const (
 	Connectors                                    = "connectors"
 	ConnectorsTelegram                            = "telegram"
-	ConnectorsTelegramBotTokenKey                 = "botTokenKey"
-	ConnectorsTelegramApiUrlSendMessage           = "apiUrlSendMessage"
-	ConnectorsTelegramParseModeMarkdown           = "parseModeMarkdown"
-	ConnectorsTelegramParseModeHTML               = "parseModeHTML"
-	ConnectorsTelegramMonitoringChatId            = "monitoringChatId"
-	ConnectorsTelegramContinuousIntegrationChatId = "continuousIntegrationChatId"
-	ConnectorsTelegramPrivateChatId               = "privateChatId"
+
+	ConnectorsTelegramContinuousIntegrationChatId = "chat-monitoring"
+	ConnectorsTelegramMonitoringChatId = "chat-monitoring"
+	ConnectorsTelegramPrivateChatId = "chat-private"
+
+	ConnectorsTelegramCiBotTokenKey = "bot-ci"
+	ConnectorsTelegramStdBotTokenKey = "bot-std"
 )
