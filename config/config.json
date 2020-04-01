@@ -46,10 +46,12 @@
     }
   },
   "connectors": {
-    "bot-std": "STD_BOT_TOKEN",
-    "bot-ci": "CI_BOT_TOKEN",
-    "chat-monitoring": "-393259181",
-    "chat-ci": "-325844941",
-    "chat-private": "518425658"
+    "telegram": {
+      "bot-std": "STD_BOT_TOKEN",
+      "bot-ci": "CI_BOT_TOKEN",
+      "chat-monitoring": "-393259181",
+      "chat-ci": "-325844941",
+      "chat-private": "518425658"
+    }
   }
 }

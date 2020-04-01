@@ -40,7 +40,7 @@ const (
 	Connectors                                    = "connectors"
 	ConnectorsTelegram                            = "telegram"
 
-	ConnectorsTelegramContinuousIntegrationChatId = "chat-monitoring"
+	ConnectorsTelegramContinuousIntegrationChatId = "chat-ci"
 	ConnectorsTelegramMonitoringChatId = "chat-monitoring"
 	ConnectorsTelegramPrivateChatId = "chat-private"
 
