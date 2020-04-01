@@ -17,6 +17,7 @@ const (
 	signUpWayTelegram = "telegram"
 	signUpWayEmail = "email"
 
+	confirmationCodeKey = "confirmation_code"
 	emailKey = "email"
 	telegramIdKey = "telegram_id"
 )
@@ -74,22 +75,31 @@ func ProfileSignUpConfirm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	confirmationCode := r.URL.Query().Get("confirmation_code")
+	confirmationCode := r.URL.Query().Get(confirmationCodeKey)
 	if confirmationCode == "" {
 		api.Api.BuildErrorResponse(http.StatusBadRequest, "missing parameter", w)
 		return
 	}
 
 	// confirm the code
+	check, msg, err := managers.ProfileManagerConfirmCode(username, password, confirmationCode)
+	if err != nil {
+		logger.Error(err.Error())
+		api.Api.BuildErrorResponse(http.StatusInternalServerError, msg, w)
+		return
+	}
+
+	if !check {
+		api.Api.BuildErrorResponse(http.StatusBadRequest, "invalid confirmation code", w)
+		return
+	}
 
 	profile, message, err := managers.ProfileManagerSignUp(username, password)
 	if err != nil {
 		logger.Error(err.Error())
-		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, profileErrorMsg, w)
-		logger.CheckErr(err)
+		api.Api.BuildErrorResponse(http.StatusInternalServerError, profileErrorMsg, w)
 	} else {
-		err := api.Api.BuildJsonResponse(true, message, profile, w)
-		logger.CheckErr(err)
+		api.Api.BuildJsonResponse(true, message, profile, w)
 	}
 }
 
