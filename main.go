@@ -34,6 +34,12 @@ var routes = service.RouteMapping{
 			http.MethodDelete: controllers.ProfileDelete,
 		},
 	},
+	"/profile/auth/confirm": {
+		Description:   "manage confirmation for account creation",
+		MethodMapping: service.MethodMapping{
+			http.MethodPost: controllers.ProfileSignUpConfirm,
+		},
+	},
 	"/api": {
 		Description: "manage the APIs DB objects",
 		MethodMapping: service.MethodMapping{
@@ -69,6 +75,18 @@ var routes = service.RouteMapping{
 	},
 }
 
+// ENV
+
+// BOT_WEBOOK: 		secret for authenticating gitlab webhook
+// CI_BOT_TOKEN: 	token of bot dedicated for CI
+// STD_BOT_TOKEN: 	token of bot dedicated for dadard.website notifs
+// USERNAME_DB: 	username for database
+// PASSWORD_DB: 	password for database
+// JWT_SECRET: 		secret to generate jwt
+// VERSION: 		version
+// CORS_ORIGIN: 	specify origin for web access
+// SMTP_PASSWORD: 	password for sending mails
+
 func main() {
 
 	Api = API.NewAPI("Core", "config/config.json", routes, true)
@@ -77,6 +95,7 @@ func main() {
 	Api.Logger.CheckErr(err)
 	Api.Database = database.NewConnector(dbConfig, true, []interface{}{
 		models.Profile{},
+		models.TempProfile{},
 		models.ApiModel{},
 		models.Subscription{},
 	})

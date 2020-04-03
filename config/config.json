@@ -54,9 +54,9 @@
       "chat-private": "518425658"
     },
     "mail": {
-      "host": "smtp.gmail.com",
+      "host": "mail.gmx.com",
       "port": "587",
-      "user": "florian.charpentier67@gmail.com",
+      "user": "dadard.website@gmx.com",
       "passwordKey": "SMTP_PASSWORD"
     }
   }

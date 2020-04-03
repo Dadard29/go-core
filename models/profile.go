@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// Repo
 type Profile struct {
 	ProfileKey      string    `gorm:"type:varchar(70);index:profile_key;primary_key"`
 	Username        string    `gorm:"type:varchar(70);index:username"`
@@ -17,10 +18,22 @@ type Profile struct {
 	Silver          bool      `gorm:"type:bool;index:silver"`
 }
 
-type ProfileChangePassword struct {
-	NewPassword string
+func (Profile) TableName() string {
+	return "profile"
 }
 
+type TempProfile struct {
+	ConfirmationCode string `gorm:"type:varchar(30);index:confirmation_code;primary_key"`
+	Username string `gorm:"type:varchar(70);index:username"`
+	PasswordEncrypt string `gorm:"type:varchar(70);index:password_encrypt"`
+	ExpirationTime time.Time `gorm:"type:datetime;index:expiration_time"`
+}
+
+func (TempProfile) TableName() string {
+	return "temp_profile"
+}
+
+// DTO
 type ProfileJson struct {
 	ProfileKey  string
 	Username    string
@@ -37,10 +50,7 @@ func NewProfileJson(p Profile) ProfileJson {
 	}
 }
 
-func (Profile) TableName() string {
-	return "profile"
-}
-
+// methods
 func (Profile) NewProfileKey() string {
 	seed := time.Now().UnixNano()
 	rand.Seed(seed)
@@ -50,6 +60,10 @@ func (Profile) NewProfileKey() string {
 	hash.Write(randBytes)
 	key := fmt.Sprintf("%x", hash.Sum(nil))
 	return key
+}
+
+type ProfileChangePassword struct {
+	NewPassword string
 }
 
 func HashPassword(password string) (string, error) {
@@ -65,24 +79,3 @@ func ComparePassword(password string, hash string) bool {
 	return err == nil
 }
 
-type Subscription struct {
-	AccessToken    string    `gorm:"type:varchar(70);index:access_token;primary_key"`
-	ProfileKey     string    `gorm:"type:varchar(70);index:profile_key"`
-	Profile        Profile   `gorm:"foreignkey:ProfileKey"`
-	ApiName        string    `gorm:"type:varchar(70);index:api_name"`
-	Api            ApiModel  `gorm:"foreignkey:ApiName"`
-	DateSubscribed time.Time `gorm:"type:date;index:date_subscribed"`
-	RequestCount   int       `gorm:"type:int;index:request_count"`
-}
-
-type SubscriptionJson struct {
-	AccessToken    string
-	Api            ApiModel
-	DateSubscribed time.Time
-	RequestCount   int
-	Quota          int
-}
-
-func (Subscription) TableName() string {
-	return "subscription"
-}

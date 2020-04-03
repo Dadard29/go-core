@@ -39,22 +39,6 @@ func ProfileGetFromUsername(username string) (models.Profile, string, error) {
 	return p, "profile retrieved", nil
 }
 
-func ProfileCreate(p models.Profile) (models.Profile, string, error) {
-	if profileExists(p) {
-		message := "existing profile with same username"
-		return models.Profile{}, message, errors.New(message)
-	}
-
-	api.Api.Database.Orm.Create(&p)
-
-	if !profileExists(p) {
-		message := "error creating profile"
-		return models.Profile{}, message, errors.New(message)
-	}
-
-	return p, "profile created", nil
-}
-
 func ProfileUpdate(p models.Profile) (models.Profile, string, error) {
 	if !profileExists(p) {
 		msg := fmt.Sprintf("no profile with username %s found", p.Username)

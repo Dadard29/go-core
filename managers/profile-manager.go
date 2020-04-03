@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/Dadard29/go-core/models"
 	"github.com/Dadard29/go-core/repositories"
-	"time"
 )
 
 func ProfileManagerGet(profileKey string) (models.ProfileJson, string, error) {
@@ -31,29 +30,6 @@ func ProfileManagerSignIn(username string, password string) (models.ProfileJson,
 	}
 
 	return models.NewProfileJson(profileDb), message, nil
-}
-
-func ProfileManagerSignUp(username string, password string) (models.ProfileJson, string, error) {
-	dateCreated := time.Now()
-	p := models.Profile{}
-	p.ProfileKey = p.NewProfileKey()
-	p.Username = username
-	hash, err := models.HashPassword(password)
-	if err != nil {
-		return models.ProfileJson{}, "error while hashing password", err
-	}
-
-	p.PasswordEncrypt = hash
-	p.DateCreated = dateCreated
-	p.Silver = false
-
-	profileDb, msg, err := repositories.ProfileCreate(p)
-	if err != nil {
-		logger.Error(err.Error())
-		return models.ProfileJson{}, msg, errors.New(msg)
-	}
-
-	return models.NewProfileJson(profileDb), "profile created", nil
 }
 
 func ProfileManagerChangePassword(username string, password string, newPassword string) (models.ProfileJson, string, error) {
