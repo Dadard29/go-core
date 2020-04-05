@@ -34,12 +34,6 @@
       "confirmationExpirationDuration": "300"
     }
   },
-  "session": {
-    "auth": {
-      "usernameKey": "USERNAME_SESSION",
-      "passwordKey": "PASSWORD_SESSION"
-    }
-  },
   "notification": {
     "bot": {
       "webhookSecretKey": "BOT_WEBHOOK"

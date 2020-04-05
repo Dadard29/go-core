@@ -66,13 +66,6 @@ var routes = service.RouteMapping{
 			http.MethodGet: controllers.SubsList,
 		},
 	},
-	"/session": {
-		Description:   "manage the privileged sessions",
-		MethodMapping: service.MethodMapping{
-			// todo
-			// leave unavailable for now
-		},
-	},
 }
 
 // ENV
