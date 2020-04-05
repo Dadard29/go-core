@@ -246,3 +246,38 @@ func SubsManagerDelete(profileKey string, apiName string) (models.SubscriptionJs
 
 	return subJson, msg, nil
 }
+
+func SubsManagerUpdate(profileKey string, apiName string) (models.SubscriptionJson, string, error) {
+	var s models.SubscriptionJson
+
+	p, msg, err := repositories.ProfileGetFromKey(profileKey)
+	if err != nil {
+		return s, msg, err
+	}
+
+	quota, err := getQuota(p)
+	if err != nil {
+		return s, "error getting quota", err
+	}
+
+	a, msg, err := repositories.ApiGet(apiName)
+	if err != nil {
+		return s, msg, err
+	}
+
+
+	subUpdated, msg, err := repositories.SubsRegenerateToken(profileKey, apiName, subsGenerateAccessToken())
+	if err != nil {
+		return s, msg, err
+	}
+
+	subJson := models.SubscriptionJson{
+		AccessToken:    subUpdated.AccessToken,
+		Api:            a,
+		DateSubscribed: subUpdated.DateSubscribed,
+		RequestCount:   subUpdated.RequestCount,
+		Quota:          quota,
+	}
+
+	return subJson, "token regenerated", nil
+}

@@ -94,6 +94,37 @@ func SubsDelete(profileKey string, apiName string) (models.Subscription, string,
 	return sDelete, "sub deleted", nil
 }
 
+func SubsRegenerateToken(profileKey string, apiName string, newAccessToken string) (models.Subscription, string, error) {
+	if !subExistsFromPkAndApiName(models.Subscription{
+		ProfileKey: profileKey,
+		ApiName:    apiName,
+	}) {
+		msg := fmt.Sprintf("no sub found for this user with api %s", apiName)
+		return models.Subscription{}, msg, errors.New(msg)
+	}
+
+	sUpdated, msg, err := SubsGetFromApiName(apiName, profileKey)
+	if err != nil {
+		return models.Subscription{}, msg, err
+	}
+
+	// deleting this sup
+	api.Api.Database.Orm.Delete(&sUpdated)
+
+	sUpdated.AccessToken = newAccessToken
+
+	// creating a new one with updated token
+	api.Api.Database.Orm.Create(&models.Subscription{
+		AccessToken:    newAccessToken,
+		ProfileKey:     sUpdated.ProfileKey,
+		ApiName:        apiName,
+		DateSubscribed: sUpdated.DateSubscribed,
+		RequestCount:   sUpdated.RequestCount,
+	})
+
+	return sUpdated, "token regenerated", nil
+}
+
 func SubsUpdateRequestCount(subscription *models.Subscription) (*models.Subscription, string, error) {
 	subscription.RequestCount += 1
 	api.Api.Database.Orm.Save(subscription)

@@ -117,10 +117,39 @@ func Subscribe(w http.ResponseWriter, r *http.Request) {
 	logger.CheckErr(err)
 }
 
+// PUT
+// Authorization: 	JWT In header Authorization
+// Params: 			apiName
+// Body: 			None
+func SubRegenerate(w http.ResponseWriter, r *http.Request) {
+	// auth
+	profileKey, err := getProfileKey(r)
+	if err != nil {
+		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
+		return
+	}
+
+	apiName := r.URL.Query().Get("apiName")
+	if apiName == "" {
+		api.Api.BuildMissingParameter(w)
+		return
+	}
+
+	subModified, message, err := managers.SubsManagerUpdate(profileKey, apiName)
+	if err != nil {
+		api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		return
+	}
+
+	api.Api.BuildJsonResponse(true, message, subModified, w)
+}
+
 // DELETE
 // Authorization: 	JWT in header Authorization
 // Params: 			apiName
 // Body: 			None
+
+// frozen controller: see https://git.dadard.fr/go-dadard/go-core/issues/6
 func Unsubscribe(w http.ResponseWriter, r *http.Request) {
 	// auth
 	profileKey, err := getProfileKey(r)
@@ -136,7 +165,7 @@ func Unsubscribe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	subList, message, err := managers.SubsManagerDelete(profileKey, apiName)
+	subDeleted, message, err := managers.SubsManagerDelete(profileKey, apiName)
 	if err != nil {
 		logger.Error(err.Error())
 		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
@@ -144,6 +173,6 @@ func Unsubscribe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = api.Api.BuildJsonResponse(true, message, subList, w)
+	err = api.Api.BuildJsonResponse(true, message, subDeleted, w)
 	logger.CheckErr(err)
 }
