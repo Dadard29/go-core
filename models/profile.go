@@ -16,6 +16,8 @@ type Profile struct {
 	PasswordEncrypt string    `gorm:"type:varchar(70);index:password_encrypt"`
 	DateCreated     time.Time `gorm:"type:date;index:date_created"`
 	Silver          bool      `gorm:"type:bool;index:silver"`
+	RecoverBy string `gorm:"type:varchar(70);index:recover_by"`
+	Contact string `gorm:"type:varchar(70);index:contact"`
 }
 
 func (Profile) TableName() string {
