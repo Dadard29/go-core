@@ -19,8 +19,6 @@ const (
 	signUpWayEmail = "email"
 
 	confirmationCodeKey = "confirmation_code"
-	emailKey = "email"
-	telegramIdKey = "telegram_id"
 	contactKey = "contact"
 )
 
@@ -44,7 +42,7 @@ func ProfileSignUp(w http.ResponseWriter, r *http.Request) {
 		api.Api.BuildMissingParameter(w)
 		return
 	}
-	if way != signUpWayTelegram && way != signUpWayEmail {
+	if !managers.ConfirmationWayIsValid(way) {
 		api.Api.BuildErrorResponse(http.StatusBadRequest, "confirmation way not found", w)
 		return
 	}
@@ -63,26 +61,12 @@ func ProfileSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 	logger.Debug(fmt.Sprintf("temp profile %s created", username))
 
-	if way == signUpWayEmail {
-		msg, err := managers.ProfileManagerSendConfirmationMail(contact, tmpP)
-		if err != nil {
-			logger.Error(err.Error())
-			managers.ProfileManagerDeleteTemp(username)
-			logger.Debug(fmt.Sprintf("temp profile %s deleted", username))
-			api.Api.BuildErrorResponse(http.StatusInternalServerError, msg, w)
-			return
-		}
-
-	} else if way == signUpWayTelegram {
-		// send ask for confirmation with telegram
-		msg, err := managers.ProfileManagerSendConfirmationTelegram(contact, tmpP)
-		if err != nil {
-			logger.Error(err.Error())
-			managers.ProfileManagerDeleteTemp(username)
-			logger.Debug(fmt.Sprintf("temp profile %s deleted", username))
-			api.Api.BuildErrorResponse(http.StatusInternalServerError, msg, w)
-			return
-		}
+	if msg, err := managers.ProfileManagerSendConfirmationCode(way, contact, tmpP); err != nil {
+		logger.Error(err.Error())
+		managers.ProfileManagerDeleteTemp(username)
+		logger.Debug(fmt.Sprintf("temp profile %s deleted", username))
+		api.Api.BuildErrorResponse(http.StatusInternalServerError, msg, w)
+		return
 	}
 
 	api.Api.BuildJsonResponse(true, "notification sent", nil, w)

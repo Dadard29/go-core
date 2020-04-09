@@ -37,7 +37,7 @@ func TempProfileGet(username string) (models.TempProfile, error) {
 		Username: username,
 	}).Find(&out)
 
-	if out.PasswordEncrypt == "" || out.Username == "" {
+	if out.Username == "" {
 		return models.TempProfile{}, errors.New("temp profile not found")
 	}
 
@@ -73,7 +73,7 @@ func SendConfirmationMail(email string, tmpProfile models.TempProfile) error {
 	return emailConnector.SendMail(email, "Identify confirmation", html)
 }
 
-func SendConfirmationTelegram(telegramUserId string, tmpProfile models.TempProfile) error {
+func SendConfirmationTelegram(contact string, tmpProfile models.TempProfile) error {
 	formattedExpirationTime := tmpProfile.ExpirationTime.Format("15:04:05")
 
 	msg := fmt.Sprintf(
@@ -87,6 +87,6 @@ func SendConfirmationTelegram(telegramUserId string, tmpProfile models.TempProfi
 			tmpProfile.ConfirmationCode,
 			formattedExpirationTime)
 
-	return telegramConnector.SendMessage(msg, telegramUserId, connectors.ParseModeMarkdown)
+	return telegramConnector.SendMessage(msg, contact, connectors.ParseModeMarkdown)
 }
 

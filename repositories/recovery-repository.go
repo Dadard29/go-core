@@ -62,10 +62,10 @@ func RecoverySendTestTelegram(profile models.Profile) error {
 
 func RecoverySendCodeTelegram(p models.Profile, code string) error {
 	msg := fmt.Sprintf(
-		"*Recovering account*\n" +
-			"Seems you are trying to recover your account" +
+		"*Recovering account*\n\n" +
+			"Seems you are trying to recover your account " +
 			"in [dadard-website](https://dadard.fr)\n\n" +
-			"To do, please use this confirmation code:\n\n" +
+			"To do so, please use this confirmation code:\n\n" +
 			"*%s*\n\n" +
 			"Have a pleasant day\n",
 			code)
@@ -83,3 +83,9 @@ func RecoverySendNotificationTelegram(p models.Profile, text string) error {
 
 	return telegramConnector.SendMessage(msg, p.Contact, connectors.ParseModeMarkdown)
 }
+
+
+// temp profile
+
+// I use the same table for the lost passwords
+// in case of recovery, the password field is null

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// Repo
+// Entity
 type Profile struct {
 	ProfileKey      string    `gorm:"type:varchar(70);index:profile_key;primary_key"`
 	Username        string    `gorm:"type:varchar(70);index:username"`

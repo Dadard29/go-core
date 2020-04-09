@@ -50,6 +50,13 @@ var routes = service.RouteMapping{
 			http.MethodGet: controllers.RecoverTestGet,
 		},
 	},
+	"/profile/recovery": {
+		Description:   "recovery an account with lost password",
+		MethodMapping: service.MethodMapping{
+			http.MethodGet: controllers.LostPassword,
+			http.MethodPost: controllers.LostPasswordConfirmCode,
+		},
+	},
 	"/api": {
 		Description: "manage the APIs DB objects",
 		MethodMapping: service.MethodMapping{

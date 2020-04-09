@@ -15,6 +15,11 @@ const (
 	charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 )
 
+var confirmByMapping = map[string]func(contact string, tmpProfile models.TempProfile) error {
+	"telegram": repositories.SendConfirmationTelegram,
+	"email": repositories.SendConfirmationMail,
+}
+
 func generateConfirmationCode() string {
 	seed := time.Now().UnixNano()
 	rand.Seed(seed)
@@ -43,23 +48,23 @@ func getExpirationDuration() time.Time {
 	return expirationTime
 }
 
-func ProfileManagerSendConfirmationMail(email string, tmpProfile models.TempProfile) (string, error) {
-
-	if err := repositories.SendConfirmationMail(email, tmpProfile); err != nil {
-		msg := "error sending mail"
-		return msg, err
-	}
-
-	return "confirmation code sent by mail", nil
+func ConfirmationWayIsValid(confirmBy string) bool {
+	_, c := confirmByMapping[confirmBy]
+	return c
 }
 
-func ProfileManagerSendConfirmationTelegram(telegramUserId string, tmpProfile models.TempProfile) (string, error) {
+func ProfileManagerSendConfirmationCode(confirmBy string, contact string, tmpProfile models.TempProfile) (string, error) {
+	if handler, c := confirmByMapping[confirmBy]; c {
+		if err := handler(contact, tmpProfile); err != nil {
+			return "error sending code", err
+		}
 
-	if err := repositories.SendConfirmationTelegram(telegramUserId, tmpProfile); err != nil {
-		return "error sending telegram message", err
+		return "code send", nil
+
+	} else {
+		msg := "bad confirmation way"
+		return msg, errors.New(msg)
 	}
-
-	return "telegram message sent", nil
 }
 
 func ProfileManagerConfirmCode(username string, password string, confirmationCode string) (string, error) {
