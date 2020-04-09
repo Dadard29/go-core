@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/Dadard29/go-core/api"
-	"github.com/Dadard29/go-core/config"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -25,65 +23,29 @@ type SendMessageResponseError struct {
 type TelegramConnector struct {
 	botToken          string
 	httpClient        *http.Client
-	chatId string
 }
 
-func NewStandardTelegramConnector(targetUserId string) (*TelegramConnector, error) {
-
-	botTokenKey, err := api.Api.Config.GetValueFromFile(
-		config.Connectors,
-		config.ConnectorsTelegram,
-		config.ConnectorsTelegramStdBotTokenKey)
-	if err != nil {
-		return nil, err
-	}
-
-	botToken := api.Api.Config.GetEnv(botTokenKey)
-	return newTelegramConnector(botToken, targetUserId)
-}
-
-func NewCITelegramConnector() (*TelegramConnector, error) {
-	ciChatId, err := api.Api.Config.GetValueFromFile(
-		config.Connectors,
-		config.ConnectorsTelegram,
-		config.ConnectorsTelegramContinuousIntegrationChatId)
-	if err != nil {
-		return nil, err
-	}
-	botTokenKey, err := api.Api.Config.GetValueFromFile(
-		config.Connectors,
-		config.ConnectorsTelegram,
-		config.ConnectorsTelegramCiBotTokenKey)
-	if err != nil {
-		return nil, err
-	}
-
-	botToken := api.Api.Config.GetEnv(botTokenKey)
-	return newTelegramConnector(botToken, ciChatId)
-}
-
-func newTelegramConnector(botToken string, chatId string) (*TelegramConnector, error) {
+func NewTelegramConnector(botToken string) (*TelegramConnector, error) {
 
 	if botToken == "" {
 		return nil, errors.New("invalid bot token")
 	}
 
-	if chatId == "" {
-		return nil, errors.New("invalid chat id")
-	}
-
 	return &TelegramConnector{
 		botToken:          botToken,
 		httpClient:        &http.Client{},
-		chatId: chatId,
 	}, nil
 }
 
-func (c *TelegramConnector) SendMessage(message string, parseMode string) error {
+func (c *TelegramConnector) SendMessage(message string, chatId string, parseMode string) error {
 	// message MUST NOT BE url encoded, as it is encoded in the function
 
+	if chatId == "" {
+		return errors.New("invalid chat ID")
+	}
+
 	messageUrlencoded := url.QueryEscape(message)
-	urlFormat := fmt.Sprintf(apiUrlSendMessage, c.botToken, c.chatId, messageUrlencoded, parseMode)
+	urlFormat := fmt.Sprintf(apiUrlSendMessage, c.botToken, chatId, messageUrlencoded, parseMode)
 
 	req, err := http.NewRequest(http.MethodGet, urlFormat, nil)
 	if err != nil {

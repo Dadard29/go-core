@@ -15,8 +15,8 @@ type MailConnector struct {
 	dialer     *gomail.Dialer
 }
 
-func NewMailConnector(from string, smtpConfig SmtpConfig) MailConnector {
-	return MailConnector{
+func NewMailConnector(from string, smtpConfig SmtpConfig) *MailConnector {
+	return &MailConnector{
 		smtpConfig: smtpConfig,
 		from: from,
 		dialer: gomail.NewDialer(

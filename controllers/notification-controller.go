@@ -34,12 +34,12 @@ func NotificationBotWebookRoute(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	status, message := managers.NotificationBotWebookManager(r.Body)
-	if status == false {
-		err = api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
-	} else {
-		err = api.Api.BuildJsonResponse(true, message, "", w)
+	err, message := managers.NotificationBotWebookManager(r.Body)
+	if err != nil {
+		logger.Error(err.Error())
+		api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
+		return
 	}
 
-	logger.CheckErr(err)
+	api.Api.BuildJsonResponse(true, message, "", w)
 }

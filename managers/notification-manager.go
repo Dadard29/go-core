@@ -8,20 +8,23 @@ import (
 	"io/ioutil"
 )
 
-func NotificationBotWebookManager(body io.ReadCloser) (bool, string) {
+func NotificationBotWebookManager(body io.ReadCloser) (error, string) {
 	var webhook models.GitlabWebhookPipeline
 
 	data, err := ioutil.ReadAll(body)
 	if err != nil {
-		logger.Error(err.Error())
-		return false, "error decoding input body"
+		return err, "error decoding input body"
 	}
 
 	err = json.Unmarshal(data, &webhook)
 	if err != nil {
-		logger.Error(err.Error())
-		return false, "error decoding json body"
+		return err, "error decoding json body"
 	}
 
-	return repositories.NotificationBotWebookRepository(webhook)
+	err = repositories.NotificationBotWebookRepository(webhook)
+	if err != nil {
+		return err, "error sending notif"
+	}
+
+	return nil, "notif sent"
 }

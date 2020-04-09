@@ -7,6 +7,7 @@ import (
 	. "github.com/Dadard29/go-core/api"
 	"github.com/Dadard29/go-core/controllers"
 	"github.com/Dadard29/go-core/models"
+	"github.com/Dadard29/go-core/repositories"
 	"net/http"
 )
 
@@ -38,6 +39,15 @@ var routes = service.RouteMapping{
 		Description:   "manage confirmation for account creation",
 		MethodMapping: service.MethodMapping{
 			http.MethodPost: controllers.ProfileSignUpConfirm,
+		},
+	},
+	"/profile/recovery/settings": {
+		Description:   "manage recovering settings",
+		MethodMapping: service.MethodMapping{
+			http.MethodPost: controllers.RecoverySet,
+			http.MethodDelete: controllers.RecoverDelete,
+			http.MethodPut: controllers.RecoverUpdate,
+			http.MethodGet: controllers.RecoverTestGet,
 		},
 	},
 	"/api": {
@@ -92,6 +102,12 @@ func main() {
 		models.ApiModel{},
 		models.Subscription{},
 	})
+
+	// set connectors objects
+	err = repositories.SetTelegramConnectors()
+	Api.Logger.CheckErr(err)
+	err = repositories.SetEmailConnectors()
+	Api.Logger.CheckErr(err)
 
 	Api.Service.Start()
 

@@ -2,13 +2,13 @@ package repositories
 
 import (
 	"fmt"
+	"github.com/Dadard29/go-core/api"
+	"github.com/Dadard29/go-core/config"
 	"github.com/Dadard29/go-core/connectors"
 	"github.com/Dadard29/go-core/models"
 )
 
-func NotificationBotWebookRepository(webhook models.GitlabWebhookPipeline) (bool, string) {
-	telegram, err := connectors.NewCITelegramConnector()
-	logger.CheckErrFatal(err)
+func NotificationBotWebookRepository(webhook models.GitlabWebhookPipeline) error {
 
 	projectName := webhook.Project.Name
 	projectUrl := webhook.Project.WebURL
@@ -17,25 +17,20 @@ func NotificationBotWebookRepository(webhook models.GitlabWebhookPipeline) (bool
 	user := webhook.User.Username
 	pipelineDuration := webhook.ObjectAttributes.Duration
 
-	message := "*%s* ([see on gitlab.com](%s))\n" +
+	msg := fmt.Sprintf("*%s* ([see on gitlab.com](%s))\n" +
 		"- build status:\t *%s*\n" +
 		"- created at:\t *%s*\n" +
 		"- started by:\t *%s*\n" +
-		"- duration:\t *%ds*\n"
-
-	messageFormat := fmt.Sprintf(message,
+		"- duration:\t *%ds*\n",
 		projectName, projectUrl, pipelineStatus, createdAt, user, pipelineDuration)
 
+	ciChatId, err := api.Api.Config.GetValueFromFile(
+		config.Connectors,
+		config.ConnectorsTelegram,
+		config.ConnectorsTelegramContinuousIntegrationChatId)
 	if err != nil {
-		return false, err.Error()
+		return err
 	}
 
-	parseMode := connectors.ParseModeMarkdown
-
-	err = telegram.SendMessage(messageFormat, parseMode)
-	if err != nil {
-		return false, err.Error()
-	}
-
-	return true, "webhook notification sent"
+	return telegramCiConnector.SendMessage(msg, ciChatId, connectors.ParseModeMarkdown)
 }

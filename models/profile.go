@@ -41,6 +41,8 @@ type ProfileJson struct {
 	Username    string
 	DateCreated time.Time
 	Silver      bool
+	RecoverBy string
+	Contact string
 }
 
 func NewProfileJson(p Profile) ProfileJson {
@@ -49,6 +51,8 @@ func NewProfileJson(p Profile) ProfileJson {
 		Username:    p.Username,
 		DateCreated: p.DateCreated,
 		Silver:      p.Silver,
+		RecoverBy:   p.RecoverBy,
+		Contact:     p.Contact,
 	}
 }
 

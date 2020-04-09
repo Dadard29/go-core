@@ -6,7 +6,6 @@ import (
 	"github.com/Dadard29/go-core/api"
 	"github.com/Dadard29/go-core/connectors"
 	"github.com/Dadard29/go-core/models"
-	"strconv"
 )
 
 func ProfileCreate(p models.Profile) (models.Profile, string, error) {
@@ -57,26 +56,6 @@ func TempProfileDelete(username string) (models.TempProfile, error) {
 }
 
 func SendConfirmationMail(email string, tmpProfile models.TempProfile) error {
-	mailConfig, err := api.Api.Config.GetSubcategoryFromFile("connectors", "mail")
-	if err != nil {
-		return err
-	}
-
-	port, err := strconv.Atoi(mailConfig["port"])
-	if err != nil {
-		return err
-	}
-
-	password := api.Api.Config.GetEnv(mailConfig["passwordKey"])
-
-	c := connectors.NewMailConnector(mailConfig["user"],
-		connectors.SmtpConfig{
-			Host:     mailConfig["host"],
-			Port:     port,
-			User:     mailConfig["user"],
-			Password: password,
-		})
-
 	formattedExpirationTime := tmpProfile.ExpirationTime.Format("15:04:05")
 
 	html := "<h3>Identify confirmation</h3>\n" +
@@ -91,17 +70,10 @@ func SendConfirmationMail(email string, tmpProfile models.TempProfile) error {
 		"<i>Note: this code will expire at " + formattedExpirationTime + "</i>" +
 		"</p>"
 
-	err = c.SendMail(email, "Identify confirmation", html)
-
-	return err
+	return emailConnector.SendMail(email, "Identify confirmation", html)
 }
 
 func SendConfirmationTelegram(telegramUserId string, tmpProfile models.TempProfile) error {
-	c, err := connectors.NewStandardTelegramConnector(telegramUserId)
-	if err != nil {
-		return err
-	}
-
 	formattedExpirationTime := tmpProfile.ExpirationTime.Format("15:04:05")
 
 	msg := fmt.Sprintf(
@@ -115,6 +87,6 @@ func SendConfirmationTelegram(telegramUserId string, tmpProfile models.TempProfi
 			tmpProfile.ConfirmationCode,
 			formattedExpirationTime)
 
-	return c.SendMessage(msg, connectors.ParseModeMarkdown)
+	return telegramConnector.SendMessage(msg, telegramUserId, connectors.ParseModeMarkdown)
 }
 

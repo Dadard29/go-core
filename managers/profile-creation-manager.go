@@ -150,6 +150,9 @@ func ProfileManagerCreate(username string, password string) (models.ProfileJson,
 	p.DateCreated = dateCreated
 	p.Silver = false
 
+	p.RecoverBy = ""
+	p.Contact = ""
+
 	profileDb, msg, err := repositories.ProfileCreate(p)
 	if err != nil {
 		logger.Error(err.Error())

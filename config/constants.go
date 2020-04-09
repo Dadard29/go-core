@@ -46,4 +46,6 @@ const (
 
 	ConnectorsTelegramCiBotTokenKey = "bot-ci"
 	ConnectorsTelegramStdBotTokenKey = "bot-std"
+
+	ConnectorsEmail = "mail"
 )
