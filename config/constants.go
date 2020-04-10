@@ -4,7 +4,7 @@ import "time"
 
 // misc
 var PrivateKeyFile = "private.pem"
-var JwtValidityDuration = 24 * time.Hour
+var JwtValidityDuration = 24 * time.Hour * 7 // valid 7 days
 var AuthorizationHeader = "Authorization"
 var InvalidToken = "invalid token"
 

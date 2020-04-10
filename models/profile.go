@@ -18,6 +18,7 @@ type Profile struct {
 	Silver          bool      `gorm:"type:bool;index:silver"`
 	RecoverBy string `gorm:"type:varchar(70);index:recover_by"`
 	Contact string `gorm:"type:varchar(70);index:contact"`
+	BeNotified bool `gorm:"type:bool;index:be_notified"`
 }
 
 func (Profile) TableName() string {
@@ -43,6 +44,7 @@ type ProfileJson struct {
 	Silver      bool
 	RecoverBy string
 	Contact string
+	BeNotified bool
 }
 
 func NewProfileJson(p Profile) ProfileJson {
@@ -53,11 +55,12 @@ func NewProfileJson(p Profile) ProfileJson {
 		Silver:      p.Silver,
 		RecoverBy:   p.RecoverBy,
 		Contact:     p.Contact,
+		BeNotified: p.BeNotified,
 	}
 }
 
 // methods
-func (Profile) NewProfileKey() string {
+func NewProfileKey() string {
 	seed := time.Now().UnixNano()
 	rand.Seed(seed)
 	randInt := rand.Int()

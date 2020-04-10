@@ -28,3 +28,23 @@ func NotificationBotWebookManager(body io.ReadCloser) (error, string) {
 
 	return nil, "notif sent"
 }
+
+func NotificationActivate(username string, password string, beNotified bool) (string, error) {
+
+	p, msg, err := repositories.ProfileGetFromUsername(username)
+	if err != nil {
+		return msg, err
+	}
+
+	if msg, err := checkUsernamePassword(p, password); err != nil {
+		return msg, err
+	}
+
+	p.BeNotified = beNotified
+
+	if _, msg, err := repositories.ProfileUpdate(p); err != nil {
+		return msg, err
+	}
+
+	return "notifications settings updated", nil
+}

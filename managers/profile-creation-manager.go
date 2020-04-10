@@ -143,20 +143,21 @@ func ProfileManagerDeleteTemp(username string) error {
 func ProfileManagerCreate(username string, password string) (models.ProfileJson, string, error) {
 
 	dateCreated := time.Now()
-	p := models.Profile{}
-	p.ProfileKey = p.NewProfileKey()
-	p.Username = username
 	hash, err := models.HashPassword(password)
 	if err != nil {
 		return models.ProfileJson{}, "error while hashing password", err
 	}
-
-	p.PasswordEncrypt = hash
-	p.DateCreated = dateCreated
-	p.Silver = false
-
-	p.RecoverBy = ""
-	p.Contact = ""
+	
+	p := models.Profile{
+		ProfileKey:      models.NewProfileKey(),
+		Username:        username,
+		PasswordEncrypt: hash,
+		DateCreated:     dateCreated,
+		Silver:          false,
+		RecoverBy:       "",
+		Contact:         "",
+		BeNotified:      false,
+	}
 
 	profileDb, msg, err := repositories.ProfileCreate(p)
 	if err != nil {

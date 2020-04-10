@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Dadard29/go-core/models"
 	"github.com/Dadard29/go-core/repositories"
+	"time"
 )
 
 const (
@@ -89,9 +90,14 @@ func RecoverySendCode(username string) (string, error) {
 		return msg, errors.New(msg)
 	}
 
-	if _, err := repositories.TempProfileGet(username); err == nil {
-		msg := "temp profile already exists, what the hell"
-		return msg, errors.New(msg)
+	if tmpP, err := repositories.TempProfileGet(username); err == nil {
+		if tmpP.ExpirationTime.After(time.Now()) {
+			msg := "temp profile already exists, what the hell"
+			return msg, errors.New(msg)
+		}
+
+		repositories.TempProfileDelete(username)
+		logger.Debug("deleted temp profile")
 	}
 
 	code := generateConfirmationCode()
@@ -122,7 +128,13 @@ func RecoveryConfirmCode(username string, password string, code string) (string,
 	// check code
 	tempProfile, err := repositories.TempProfileGet(username)
 	if err != nil {
-		return "no request sent, what have you done", err
+		return "this user has not requested an account recovery, what the hell is going on", err
+	}
+
+	if tempProfile.ExpirationTime.Before(time.Now()) {
+		repositories.TempProfileDelete(username)
+		msg := "code expired, ask for a new code"
+		return msg, errors.New(msg)
 	}
 
 	if code != tempProfile.ConfirmationCode {

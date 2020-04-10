@@ -77,7 +77,7 @@ func JwtValidate(w http.ResponseWriter, r *http.Request) {
 		err := api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
 		logger.CheckErr(err)
 	} else {
-		err := api.Api.BuildJsonResponse(true, "valid token", "", w)
+		err := api.Api.BuildJsonResponse(true, "valid token", nil, w)
 		logger.CheckErr(err)
 	}
 }

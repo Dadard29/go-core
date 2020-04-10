@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"github.com/Dadard29/go-api-utils/auth"
 	"github.com/Dadard29/go-core/api"
 	"github.com/Dadard29/go-core/config"
 	"github.com/Dadard29/go-core/managers"
@@ -42,4 +43,41 @@ func NotificationBotWebookRoute(w http.ResponseWriter, r *http.Request) {
 	}
 
 	api.Api.BuildJsonResponse(true, message, "", w)
+}
+
+// POST
+// Authorization: 	JWT
+// Params: 			be_notified
+// Body: 			None
+func NotificationActivate(w http.ResponseWriter, r *http.Request) {
+	// auth
+	username, password, err := auth.ParseBasicAuth(r)
+	if err != nil {
+		logger.Error(err.Error())
+		api.Api.BuildErrorResponse(http.StatusUnauthorized, "wrong auth format", w)
+		return
+	}
+
+	beNotified := r.URL.Query().Get("be_notified")
+	if beNotified == "" {
+		api.Api.BuildMissingParameter(w)
+		return
+	}
+
+	var msg string
+	if beNotified == "true" {
+		msg, err = managers.NotificationActivate(username, password, true)
+	} else if beNotified == "false" {
+		msg, err = managers.NotificationActivate(username, password, false)
+	} else {
+		api.Api.BuildErrorResponse(http.StatusBadRequest, "invalid parameter value", w)
+		return
+	}
+
+	if err != nil {
+		api.Api.BuildErrorResponse(http.StatusInternalServerError, msg, w)
+		return
+	}
+
+	api.Api.BuildJsonResponse(true, "notification settings changed", nil, w)
 }

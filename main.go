@@ -57,6 +57,12 @@ var routes = service.RouteMapping{
 			http.MethodPost: controllers.LostPasswordConfirmCode,
 		},
 	},
+	"/profile/notification": {
+		Description:   "manage notification for profile",
+		MethodMapping: service.MethodMapping{
+			http.MethodPost: controllers.NotificationActivate,
+		},
+	},
 	"/api": {
 		Description: "manage the APIs DB objects",
 		MethodMapping: service.MethodMapping{
