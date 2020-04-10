@@ -7,6 +7,10 @@ import (
 	"net/http"
 )
 
+// GET
+// Authorization: 	JWT
+// Params: 			None
+// Body: 			None
 func ApiListGet(w http.ResponseWriter, r *http.Request) {
 	if !checkJwt(r) {
 		api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
