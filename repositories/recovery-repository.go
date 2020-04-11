@@ -41,11 +41,34 @@ func RecoverySendTestMail(p models.Profile) error {
 }
 
 func RecoverySendCodeMail(p models.Profile, code string) error {
-	return nil
+	html := "<h3>Recovering account</h3>" +
+		"<p>" +
+		"Hello my dude," +
+		"</p>" +
+		"<p>" +
+		"Seems you are trying to recover your account " +
+		"in <a href=\"https://dadard.fr\">dadard-website</a>." +
+		"<p>" +
+		"<p>" +
+		"To do so, please use this confirmation code:" +
+		"</p>" +
+		"<h2>" + code + "</h2>" +
+		"<p>Have a pleasant day</p>"
+
+	return emailConnector.SendMail(p.Contact, "Recovering account", html)
 }
 
 func RecoverySendNotificationMail(p models.Profile, text string) error {
-	return nil
+
+	html := "<p>" +
+		text +
+		"</p>" +
+		"<p>Have a pleasant day</p>" +
+		"<p>NB: <i>you receive these messages because you " +
+		"activated the notifications on <a href=\"https://dadard.fr/profile\">dadard-website</a>." +
+		"You can deactivate this setting at any time</i>"
+
+	return emailConnector.SendMail(p.Contact, "Notification", html)
 }
 
 
