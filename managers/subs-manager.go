@@ -281,3 +281,17 @@ func SubsManagerUpdate(profileKey string, apiName string) (models.SubscriptionJs
 
 	return subJson, "token regenerated", nil
 }
+
+
+// warning: admin operation
+func SubsManagerResetRequestCount() (string, error) {
+	allSubs := repositories.SubsGetAll()
+	for _, s := range allSubs {
+		_, _, err := repositories.SubsResetRequestCount(&s)
+		if err != nil {
+			logger.Warning(err.Error())
+		}
+	}
+
+	return "all requests count reset", nil
+}

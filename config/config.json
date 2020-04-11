@@ -53,5 +53,10 @@
       "user": "dadard.website@gmx.com",
       "passwordKey": "SMTP_PASSWORD"
     }
+  },
+  "endpoints": {
+    "protected":{
+      "key": "PROTECTED"
+    }
   }
 }

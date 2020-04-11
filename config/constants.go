@@ -49,3 +49,9 @@ const (
 
 	ConnectorsEmail = "mail"
 )
+
+const (
+	Endpoints = "endpoints"
+	EndpointsProtected = "protected"
+	EndpointsProtectedKey = "key"
+)

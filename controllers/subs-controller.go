@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/Dadard29/go-api-utils/auth"
 	"github.com/Dadard29/go-core/api"
 	"github.com/Dadard29/go-core/config"
 	"github.com/Dadard29/go-core/managers"
@@ -142,6 +143,36 @@ func SubRegenerate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	api.Api.BuildJsonResponse(true, message, subModified, w)
+}
+
+// DELETE
+// Authorization: 	protected token
+// Params: 			None
+// Body: 			None
+func SubResetAll(w http.ResponseWriter, r *http.Request) {
+	authToken := auth.ParseApiKey(r, "Authorization", true)
+
+	protectedTokenKey, err := api.Api.Config.GetValueFromFile(
+		config.Endpoints,
+		config.EndpointsProtected,
+		config.EndpointsProtectedKey)
+	if err != nil {
+		api.Api.BuildErrorResponse(http.StatusInternalServerError, "error getting config", w)
+		return
+	}
+	protectedToken := api.Api.Config.GetEnv(protectedTokenKey)
+	if authToken != protectedToken {
+		api.Api.BuildErrorResponse(http.StatusForbidden, "bad token", w)
+		return
+	}
+
+	if msg, err := managers.SubsManagerResetRequestCount(); err != nil {
+		logger.Error(err.Error())
+		api.Api.BuildErrorResponse(http.StatusInternalServerError, msg, w)
+		return
+	}
+
+	api.Api.BuildJsonResponse(true, "requests count reset", nil, w)
 }
 
 // DELETE

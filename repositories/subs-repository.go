@@ -131,3 +131,16 @@ func SubsUpdateRequestCount(subscription *models.Subscription) (*models.Subscrip
 
 	return subscription, "request count incremented", nil
 }
+
+func SubsResetRequestCount(sub *models.Subscription) (*models.Subscription, string, error) {
+	sub.RequestCount = 0
+	api.Api.Database.Orm.Save(sub)
+
+	return sub, "request count reset", nil
+}
+
+func SubsGetAll() []models.Subscription {
+	var all []models.Subscription
+	api.Api.Database.Orm.Find(&all)
+	return all
+}

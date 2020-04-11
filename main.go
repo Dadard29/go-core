@@ -81,6 +81,7 @@ var routes = service.RouteMapping{
 			http.MethodPost:   controllers.Subscribe,
 			http.MethodGet:    controllers.SubsCheckExists,
 			http.MethodPut: controllers.SubRegenerate,
+			http.MethodDelete: controllers.SubResetAll,
 		},
 	},
 	"/subs/list": {
