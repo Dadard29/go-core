@@ -64,6 +64,7 @@ func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
 		}
 
 	} else if apiName != "" {
+		// informative way
 		profileKey, err := getProfileKey(r)
 		if err != nil {
 			api.Api.BuildErrorResponse(http.StatusForbidden, config.InvalidToken, w)
@@ -149,6 +150,8 @@ func SubRegenerate(w http.ResponseWriter, r *http.Request) {
 // Authorization: 	protected token
 // Params: 			None
 // Body: 			None
+
+// warning: sensitive endpoint
 func SubResetAll(w http.ResponseWriter, r *http.Request) {
 	authToken := auth.ParseApiKey(r, "Authorization", true)
 

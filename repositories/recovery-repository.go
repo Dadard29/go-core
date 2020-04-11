@@ -78,7 +78,10 @@ func RecoverySendNotificationTelegram(p models.Profile, text string) error {
 	msg := fmt.Sprintf(
 		"*Notifications*\n\n" +
 			"%s\n\n" +
-			"Have a pleasant day\n\n",
+			"Have a pleasant day\n\n" +
+			"NB: _you receive these messages because you " +
+			"activated the notifications on_ [dadard-website](https://dadard.fr/profile). " +
+			"_You can deactivate this setting at any time_",
 			text)
 
 	return telegramConnector.SendMessage(msg, p.Contact, connectors.ParseModeMarkdown)

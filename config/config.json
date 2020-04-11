@@ -27,7 +27,7 @@
       "secretKey": "JWT_SECRET"
     },
     "quota": {
-      "notSilver": "100",
+      "notSilver": "10",
       "silver": "10000"
     },
     "creation": {
