@@ -105,6 +105,9 @@ func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, 
 		return s, msg, err
 	}
 
+	// todo
+	// if sub created from echo-slam api, skip checks and return
+
 	profile, msg, err := repositories.ProfileGetFromKey(subDb.ProfileKey)
 	if err != nil {
 		return s, msg, err
@@ -138,13 +141,7 @@ func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, 
 		return s, msg, err
 	}
 
-	return models.SubscriptionJson{
-		AccessToken:    newSubDb.AccessToken,
-		Api:            a,
-		DateSubscribed: newSubDb.DateSubscribed,
-		RequestCount:   newSubDb.RequestCount,
-		Quota:          quota,
-	}, "sub checked", nil
+	return models.NewSubscriptionJson(*newSubDb, a, quota), "sub checked", nil
 }
 
 func SubsManagerGetFromApiName(apiName string, profileKey string) (models.SubscriptionJson, string, error) {
@@ -170,16 +167,10 @@ func SubsManagerGetFromApiName(apiName string, profileKey string) (models.Subscr
 		return s, msg, err
 	}
 
-	return models.SubscriptionJson{
-		AccessToken:    subDb.AccessToken,
-		Api:            a,
-		DateSubscribed: subDb.DateSubscribed,
-		RequestCount:   subDb.RequestCount,
-		Quota:          quota,
-	}, "sub checked", nil
+	return models.NewSubscriptionJson(subDb, a, quota), "sub checked", nil
 }
 
-func SubsManagerList(profileKey string) ([]models.SubscriptionJson, string, error) {
+func SubsManagerList(profileKey string, fromEchoSlam bool) ([]models.SubscriptionJson, string, error) {
 	var s []models.SubscriptionJson
 
 	p, msg, err := repositories.ProfileGetFromKey(profileKey)
@@ -199,24 +190,24 @@ func SubsManagerList(profileKey string) ([]models.SubscriptionJson, string, erro
 
 	var subListJson = make([]models.SubscriptionJson, 0)
 	for _, sub := range subDb {
+
+		// filter
+		if sub.FromEchoSlam != fromEchoSlam {
+			continue
+		}
+
 		a, _, err := repositories.ApiGet(sub.ApiName)
 		if err != nil {
 			continue
 		}
 
-		subListJson = append(subListJson, models.SubscriptionJson{
-			AccessToken:    sub.AccessToken,
-			Api:            a,
-			DateSubscribed: sub.DateSubscribed,
-			RequestCount:   sub.RequestCount,
-			Quota:          quota,
-		})
+		subListJson = append(subListJson, models.NewSubscriptionJson(sub, a, quota))
 	}
 
 	return subListJson, msg, nil
 }
 
-func SubsManagerCreate(profileKey string, apiName string) (models.SubscriptionJson, string, error) {
+func SubsManagerCreate(profileKey string, apiName string, fromEchoSlam bool) (models.SubscriptionJson, string, error) {
 	var s models.SubscriptionJson
 
 	p, msg, err := repositories.ProfileGetFromKey(profileKey)
@@ -244,18 +235,14 @@ func SubsManagerCreate(profileKey string, apiName string) (models.SubscriptionJs
 		ProfileKey:     p.ProfileKey,
 		ApiName:        a.Name,
 		DateSubscribed: time.Now(),
+		RequestCount:   0,
+		FromEchoSlam:   fromEchoSlam,
 	})
 	if err != nil {
 		return s, msg, err
 	}
 
-	subJson := models.SubscriptionJson{
-		AccessToken:    subDb.AccessToken,
-		Api:            a,
-		DateSubscribed: subDb.DateSubscribed,
-		RequestCount:   subDb.RequestCount,
-		Quota:          quota,
-	}
+	subJson := models.NewSubscriptionJson(subDb, a, quota)
 
 	return subJson, msg, nil
 }
@@ -283,13 +270,7 @@ func SubsManagerDelete(profileKey string, apiName string) (models.SubscriptionJs
 		return s, msg, err
 	}
 
-	subJson := models.SubscriptionJson{
-		AccessToken:    subDb.AccessToken,
-		Api:            a,
-		DateSubscribed: subDb.DateSubscribed,
-		RequestCount:   subDb.RequestCount,
-		Quota:          quota,
-	}
+	subJson := models.NewSubscriptionJson(subDb, a, quota)
 
 	return subJson, msg, nil
 }
@@ -318,13 +299,7 @@ func SubsManagerUpdate(profileKey string, apiName string) (models.SubscriptionJs
 		return s, msg, err
 	}
 
-	subJson := models.SubscriptionJson{
-		AccessToken:    subUpdated.AccessToken,
-		Api:            a,
-		DateSubscribed: subUpdated.DateSubscribed,
-		RequestCount:   subUpdated.RequestCount,
-		Quota:          quota,
-	}
+	subJson := models.NewSubscriptionJson(subUpdated, a, quota)
 
 	return subJson, "token regenerated", nil
 }

@@ -10,6 +10,17 @@ type Subscription struct {
 	Api            ApiModel  `gorm:"foreignkey:ApiName"`
 	DateSubscribed time.Time `gorm:"type:date;index:date_subscribed"`
 	RequestCount   int       `gorm:"type:int;index:request_count"`
+	FromEchoSlam bool `gorm:"type:bool;index:from_echo_slam"`
+}
+
+func NewSubscriptionJson(s Subscription, a ApiModel, quota int) SubscriptionJson {
+	return SubscriptionJson{
+		AccessToken:    s.AccessToken,
+		Api:            a,
+		DateSubscribed: s.DateSubscribed,
+		RequestCount:   s.RequestCount,
+		Quota:          quota,
+	}
 }
 
 type SubscriptionJson struct {

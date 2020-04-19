@@ -63,6 +63,12 @@ var routes = service.RouteMapping{
 			http.MethodPost: controllers.NotificationActivate,
 		},
 	},
+	"/profile/echo-slam": {
+		Description:   "manage profile from echo-slam api",
+		MethodMapping: service.MethodMapping{
+			http.MethodPost: controllers.SignUpFromEchoSlam,
+		},
+	},
 	"/api": {
 		Description: "manage the APIs DB objects",
 		MethodMapping: service.MethodMapping{
@@ -84,6 +90,12 @@ var routes = service.RouteMapping{
 			http.MethodDelete: controllers.SubResetAll,
 		},
 	},
+	"/subs/echo-slam": {
+		Description:   "manage subscription from echo-slam",
+		MethodMapping: service.MethodMapping{
+			http.MethodPost: controllers.SubscribeFromEchoSlam,
+		},
+	},
 	"/subs/list": {
 		Description: "manage the subscriptions list",
 		MethodMapping: service.MethodMapping{
@@ -103,6 +115,7 @@ var routes = service.RouteMapping{
 // VERSION: 		version
 // CORS_ORIGIN: 	specify origin for web access
 // SMTP_PASSWORD: 	password for sending mails
+// ECHO_SLAM_TOKEN: token to authenticate echo-slam calls
 
 func main() {
 

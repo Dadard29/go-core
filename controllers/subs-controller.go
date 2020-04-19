@@ -21,7 +21,8 @@ func SubsList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	subList, message, err := managers.SubsManagerList(profileKey)
+	// get the list (fromEchoSlam = false)
+	subList, message, err := managers.SubsManagerList(profileKey, false)
 	if err != nil {
 		logger.Error(err.Error())
 		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
@@ -54,6 +55,8 @@ func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
 		api.Api.BuildErrorResponse(http.StatusBadRequest, "args overload", w)
 		return
 	} else if subToken != "" {
+		// this is a call from a slave API
+
 		// record token usage
 		s, message, err = managers.SubsManagerGetFromToken(subToken)
 		if err != nil {
@@ -107,7 +110,7 @@ func Subscribe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	subList, message, err := managers.SubsManagerCreate(profileKey, apiName)
+	sub, message, err := managers.SubsManagerCreate(profileKey, apiName, false)
 	if err != nil {
 		logger.Error(err.Error())
 		err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)
@@ -115,7 +118,7 @@ func Subscribe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = api.Api.BuildJsonResponse(true, message, subList, w)
+	err = api.Api.BuildJsonResponse(true, message, sub, w)
 	logger.CheckErr(err)
 }
 
