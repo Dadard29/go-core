@@ -11,6 +11,9 @@ import (
 
 const (
 	profileKeyParam = "profileKey"
+	recoverByParam = "recover_by"
+	contactParam = "contact"
+
 	tokenHeader = "X-Echo-Slam"
 	tokenKey = "ECHO_SLAM_TOKEN"
 )
@@ -21,11 +24,18 @@ func checkEchoSlamToken(r *http.Request) bool {
 
 // GET
 // Authorization: 	Basic + echo-slam header
-// Params: 			None
+// Params: 			recoverByParam, contactParam
 // Body: 			None
 func SignUpFromEchoSlam(w http.ResponseWriter, r *http.Request) {
 	if !checkEchoSlamToken(r) {
 		api.Api.BuildErrorResponse(http.StatusUnauthorized, "unauthorized", w)
+		return
+	}
+
+	recoverBy := r.URL.Query().Get(recoverByParam)
+	contact := r.URL.Query().Get(contactParam)
+	if recoverBy == "" || contact == "" {
+		api.Api.BuildMissingParameter(w)
 		return
 	}
 
@@ -36,7 +46,7 @@ func SignUpFromEchoSlam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p, msg, err := managers.ProfileManagerCreate(username, password)
+	p, msg, err := managers.ProfileManagerCreate(username, password, recoverBy, contact)
 	if err != nil {
 		logger.Error(err.Error())
 		api.Api.BuildErrorResponse(http.StatusInternalServerError, msg, w)

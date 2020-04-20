@@ -140,7 +140,7 @@ func ProfileManagerDeleteTemp(username string) error {
 	return err
 }
 
-func ProfileManagerCreate(username string, password string) (models.ProfileJson, string, error) {
+func ProfileManagerCreate(username string, password string, recoveryBy string, contact string) (models.ProfileJson, string, error) {
 
 	dateCreated := time.Now()
 	hash, err := models.HashPassword(password)
@@ -154,8 +154,8 @@ func ProfileManagerCreate(username string, password string) (models.ProfileJson,
 		PasswordEncrypt: hash,
 		DateCreated:     dateCreated,
 		Silver:          false,
-		RecoverBy:       "",
-		Contact:         "",
+		RecoverBy:       recoveryBy,
+		Contact:         contact,
 		BeNotified:      false,
 	}
 

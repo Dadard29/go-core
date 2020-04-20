@@ -98,7 +98,7 @@ func ProfileSignUpConfirm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	profile, message, err := managers.ProfileManagerCreate(username, password)
+	profile, message, err := managers.ProfileManagerCreate(username, password, "", "")
 	if err != nil {
 		logger.Error(err.Error())
 		api.Api.BuildErrorResponse(http.StatusInternalServerError, profileErrorMsg, w)
