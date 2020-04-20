@@ -34,10 +34,10 @@ func SubsGetFromApiName(apiName string, profileKey string, fromEchoSlam bool) (m
 	var subDb models.Subscription
 	api.Api.Database.Orm.Where(&models.Subscription{
 		ProfileKey: profileKey,
-		ApiName:    apiName,
 		FromEchoSlam: fromEchoSlam,
-	}).First(&subDb)
-	if subDb.ApiName == apiName && subDb.ProfileKey == profileKey && subDb.FromEchoSlam ==  fromEchoSlam {
+		ApiName:    apiName,
+	}).Find(&subDb)
+	if subDb.ApiName == apiName && subDb.ProfileKey == profileKey && subDb.FromEchoSlam == fromEchoSlam {
 		return subDb, "sub checked", nil
 	} else {
 		msg := "no sub with for this user and the api " + apiName

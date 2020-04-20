@@ -105,8 +105,14 @@ func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, 
 		return s, msg, err
 	}
 
-	// todo
-	// if sub created from echo-slam api, skip checks and return
+	a, msg, err := repositories.ApiGet(subDb.ApiName)
+	if err != nil {
+		return s, msg, err
+	}
+
+	if subDb.FromEchoSlam {
+		return models.NewSubscriptionJson(subDb, a, -1), "subs for echo slam retrieved", nil
+	}
 
 	profile, msg, err := repositories.ProfileGetFromKey(subDb.ProfileKey)
 	if err != nil {
@@ -134,11 +140,6 @@ func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, 
 
 	if err := sendNotificationQuotaReached(*newSubDb, quota, profile); err != nil {
 		logger.Warning(err.Error())
-	}
-
-	a, msg, err := repositories.ApiGet(newSubDb.ApiName)
-	if err != nil {
-		return s, msg, err
 	}
 
 	return models.NewSubscriptionJson(*newSubDb, a, quota), "sub checked", nil
