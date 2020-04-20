@@ -18,7 +18,7 @@ type MailConnector struct {
 func NewMailConnector(from string, smtpConfig SmtpConfig) *MailConnector {
 	return &MailConnector{
 		smtpConfig: smtpConfig,
-		from: from,
+		from:       from,
 		dialer: gomail.NewDialer(
 			smtpConfig.Host,
 			smtpConfig.Port,
@@ -27,7 +27,7 @@ func NewMailConnector(from string, smtpConfig SmtpConfig) *MailConnector {
 	}
 }
 
-func (mc MailConnector) SendMail (to string, subject string, html string) error {
+func (mc MailConnector) SendMail(to string, subject string, html string) error {
 	m := gomail.NewMessage()
 	m.SetHeader("From", mc.from)
 	m.SetHeader("To", to)

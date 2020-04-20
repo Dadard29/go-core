@@ -77,16 +77,15 @@ func SendConfirmationTelegram(contact string, tmpProfile models.TempProfile) err
 	formattedExpirationTime := tmpProfile.ExpirationTime.Format("15:04:05")
 
 	msg := fmt.Sprintf(
-		"*Identity confirmation*\n" +
-			"You have requested an account creation " +
-			"in [dadard-website](https://dadard.fr)\n\n" +
-			"In order to confirm your identify, please use " +
-			"this confirmation code:\n\n" +
-			"*%s*\n\n" +
+		"*Identity confirmation*\n"+
+			"You have requested an account creation "+
+			"in [dadard-website](https://dadard.fr)\n\n"+
+			"In order to confirm your identify, please use "+
+			"this confirmation code:\n\n"+
+			"*%s*\n\n"+
 			"(this code will expire at %v)\n",
-			tmpProfile.ConfirmationCode,
-			formattedExpirationTime)
+		tmpProfile.ConfirmationCode,
+		formattedExpirationTime)
 
 	return telegramConnector.SendMessage(msg, contact, connectors.ParseModeMarkdown)
 }
-

@@ -17,10 +17,10 @@ func NotificationBotWebookRepository(webhook models.GitlabWebhookPipeline) error
 	user := webhook.User.Username
 	pipelineDuration := webhook.ObjectAttributes.Duration
 
-	msg := fmt.Sprintf("*%s* ([see on gitlab.com](%s/pipelines))\n" +
-		"- build status:\t *%s*\n" +
-		"- created at:\t *%s*\n" +
-		"- started by:\t *%s*\n" +
+	msg := fmt.Sprintf("*%s* ([see on gitlab.com](%s/pipelines))\n"+
+		"- build status:\t *%s*\n"+
+		"- created at:\t *%s*\n"+
+		"- started by:\t *%s*\n"+
 		"- duration:\t *%ds*\n",
 		projectName, projectUrl, pipelineStatus, createdAt, user, pipelineDuration)
 

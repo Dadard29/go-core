@@ -71,7 +71,6 @@ func RecoverySendNotificationMail(p models.Profile, text string) error {
 	return emailConnector.SendMail(p.Contact, "Notification", html)
 }
 
-
 // telegram
 func RecoverySendTestTelegram(profile models.Profile) error {
 	msg := fmt.Sprintf(
@@ -85,13 +84,13 @@ func RecoverySendTestTelegram(profile models.Profile) error {
 
 func RecoverySendCodeTelegram(p models.Profile, code string) error {
 	msg := fmt.Sprintf(
-		"*Recovering account*\n\n" +
-			"Seems you are trying to recover your account " +
-			"in [dadard-website](https://dadard.fr)\n\n" +
-			"To do so, please use this confirmation code:\n\n" +
-			"*%s*\n\n" +
+		"*Recovering account*\n\n"+
+			"Seems you are trying to recover your account "+
+			"in [dadard-website](https://dadard.fr)\n\n"+
+			"To do so, please use this confirmation code:\n\n"+
+			"*%s*\n\n"+
 			"Have a pleasant day\n",
-			code)
+		code)
 
 	return telegramConnector.SendMessage(msg, p.Contact, connectors.ParseModeMarkdown)
 }
@@ -99,17 +98,16 @@ func RecoverySendCodeTelegram(p models.Profile, code string) error {
 func RecoverySendNotificationTelegram(p models.Profile, text string) error {
 
 	msg := fmt.Sprintf(
-		"*Notifications*\n\n" +
-			"%s\n\n" +
-			"Have a pleasant day\n\n" +
-			"NB: _you receive these messages because you " +
-			"activated the notifications on_ [dadard-website](https://dadard.fr/profile). " +
+		"*Notifications*\n\n"+
+			"%s\n\n"+
+			"Have a pleasant day\n\n"+
+			"NB: _you receive these messages because you "+
+			"activated the notifications on_ [dadard-website](https://dadard.fr/profile). "+
 			"_You can deactivate this setting at any time_",
-			text)
+		text)
 
 	return telegramConnector.SendMessage(msg, p.Contact, connectors.ParseModeMarkdown)
 }
-
 
 // temp profile
 

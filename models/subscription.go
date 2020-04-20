@@ -10,7 +10,7 @@ type Subscription struct {
 	Api            ApiModel  `gorm:"foreignkey:ApiName"`
 	DateSubscribed time.Time `gorm:"type:date;index:date_subscribed"`
 	RequestCount   int       `gorm:"type:int;index:request_count"`
-	FromEchoSlam bool `gorm:"type:bool;index:from_echo_slam"`
+	FromEchoSlam   bool      `gorm:"type:bool;index:from_echo_slam"`
 }
 
 func NewSubscriptionJson(s Subscription, a ApiModel, quota int) SubscriptionJson {
@@ -34,4 +34,3 @@ type SubscriptionJson struct {
 func (Subscription) TableName() string {
 	return "subscription"
 }
-

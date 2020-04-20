@@ -10,8 +10,8 @@ import (
 func subExistsFromPkAndApiName(s models.Subscription) bool {
 	var subDb models.Subscription
 	api.Api.Database.Orm.Where(&models.Subscription{
-		ProfileKey: s.ProfileKey,
-		ApiName:    s.ApiName,
+		ProfileKey:   s.ProfileKey,
+		ApiName:      s.ApiName,
 		FromEchoSlam: s.FromEchoSlam,
 	}).Find(&subDb)
 	return subDb.ProfileKey == s.ProfileKey && subDb.ApiName == s.ApiName && subDb.FromEchoSlam == s.FromEchoSlam
@@ -33,9 +33,9 @@ func SubsGetFromPkAndToken(subToken string) (models.Subscription, string, error)
 func SubsGetFromApiName(apiName string, profileKey string, fromEchoSlam bool) (models.Subscription, string, error) {
 	var subDb models.Subscription
 	api.Api.Database.Orm.Where(&models.Subscription{
-		ProfileKey: profileKey,
+		ProfileKey:   profileKey,
 		FromEchoSlam: fromEchoSlam,
-		ApiName:    apiName,
+		ApiName:      apiName,
 	}).Find(&subDb)
 	if subDb.ApiName == apiName && subDb.ProfileKey == profileKey && subDb.FromEchoSlam == fromEchoSlam {
 		return subDb, "sub checked", nil

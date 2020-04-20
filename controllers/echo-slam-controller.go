@@ -11,11 +11,11 @@ import (
 
 const (
 	profileKeyParam = "profileKey"
-	recoverByParam = "recover_by"
-	contactParam = "contact"
+	recoverByParam  = "recover_by"
+	contactParam    = "contact"
 
 	tokenHeader = "X-Echo-Slam"
-	tokenKey = "ECHO_SLAM_TOKEN"
+	tokenKey    = "ECHO_SLAM_TOKEN"
 )
 
 func checkEchoSlamToken(r *http.Request) bool {
@@ -56,7 +56,6 @@ func SignUpFromEchoSlam(w http.ResponseWriter, r *http.Request) {
 	api.Api.BuildJsonResponse(true, msg, p, w)
 }
 
-
 // POST
 // Authorization: 	echo-slam header
 // Params: 			profileKeyParam
@@ -93,7 +92,7 @@ func SubscribeFromEchoSlam(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var subs []models.SubscriptionJson
-	for _, a := range  body {
+	for _, a := range body {
 		s, msg, err := managers.SubsManagerCreate(pk, a, true)
 		if err != nil {
 			logger.Error(err.Error())

@@ -16,9 +16,9 @@ type Profile struct {
 	PasswordEncrypt string    `gorm:"type:varchar(70);index:password_encrypt"`
 	DateCreated     time.Time `gorm:"type:date;index:date_created"`
 	Silver          bool      `gorm:"type:bool;index:silver"`
-	RecoverBy string `gorm:"type:varchar(70);index:recover_by"`
-	Contact string `gorm:"type:varchar(70);index:contact"`
-	BeNotified bool `gorm:"type:bool;index:be_notified"`
+	RecoverBy       string    `gorm:"type:varchar(70);index:recover_by"`
+	Contact         string    `gorm:"type:varchar(70);index:contact"`
+	BeNotified      bool      `gorm:"type:bool;index:be_notified"`
 }
 
 func (Profile) TableName() string {
@@ -26,10 +26,10 @@ func (Profile) TableName() string {
 }
 
 type TempProfile struct {
-	ConfirmationCode string `gorm:"type:varchar(30);index:confirmation_code;primary_key"`
-	Username string `gorm:"type:varchar(70);index:username"`
-	PasswordEncrypt string `gorm:"type:varchar(70);index:password_encrypt"`
-	ExpirationTime time.Time `gorm:"type:datetime;index:expiration_time"`
+	ConfirmationCode string    `gorm:"type:varchar(30);index:confirmation_code;primary_key"`
+	Username         string    `gorm:"type:varchar(70);index:username"`
+	PasswordEncrypt  string    `gorm:"type:varchar(70);index:password_encrypt"`
+	ExpirationTime   time.Time `gorm:"type:datetime;index:expiration_time"`
 }
 
 func (TempProfile) TableName() string {
@@ -42,9 +42,9 @@ type ProfileJson struct {
 	Username    string
 	DateCreated time.Time
 	Silver      bool
-	RecoverBy string
-	Contact string
-	BeNotified bool
+	RecoverBy   string
+	Contact     string
+	BeNotified  bool
 }
 
 func NewProfileJson(p Profile) ProfileJson {
@@ -55,7 +55,7 @@ func NewProfileJson(p Profile) ProfileJson {
 		Silver:      p.Silver,
 		RecoverBy:   p.RecoverBy,
 		Contact:     p.Contact,
-		BeNotified: p.BeNotified,
+		BeNotified:  p.BeNotified,
 	}
 }
 
@@ -87,4 +87,3 @@ func ComparePassword(password string, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
 }
-

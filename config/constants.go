@@ -19,13 +19,13 @@ const (
 )
 
 const (
-	Profile               = "profile"
-	ProfileJwt            = "jwt"
-	ProfileJwtSecretKey   = "secretKey"
-	ProfileQuota          = "quota"
-	ProfileQuotaSilver    = "silver"
-	ProfileQuotaNotSilver = "notSilver"
-	ProfileCreation = "creation"
+	Profile                                       = "profile"
+	ProfileJwt                                    = "jwt"
+	ProfileJwtSecretKey                           = "secretKey"
+	ProfileQuota                                  = "quota"
+	ProfileQuotaSilver                            = "silver"
+	ProfileQuotaNotSilver                         = "notSilver"
+	ProfileCreation                               = "creation"
 	ProfileCreationConfirmationExpirationDuration = "confirmationExpirationDuration"
 )
 
@@ -37,21 +37,21 @@ const (
 )
 
 const (
-	Connectors                                    = "connectors"
-	ConnectorsTelegram                            = "telegram"
+	Connectors         = "connectors"
+	ConnectorsTelegram = "telegram"
 
 	ConnectorsTelegramContinuousIntegrationChatId = "chat-ci"
-	ConnectorsTelegramMonitoringChatId = "chat-monitoring"
-	ConnectorsTelegramPrivateChatId = "chat-private"
+	ConnectorsTelegramMonitoringChatId            = "chat-monitoring"
+	ConnectorsTelegramPrivateChatId               = "chat-private"
 
-	ConnectorsTelegramCiBotTokenKey = "bot-ci"
+	ConnectorsTelegramCiBotTokenKey  = "bot-ci"
 	ConnectorsTelegramStdBotTokenKey = "bot-std"
 
 	ConnectorsEmail = "mail"
 )
 
 const (
-	Endpoints = "endpoints"
-	EndpointsProtected = "protected"
+	Endpoints             = "endpoints"
+	EndpointsProtected    = "protected"
 	EndpointsProtectedKey = "key"
 )

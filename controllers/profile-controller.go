@@ -14,12 +14,12 @@ import (
 const (
 	profileErrorMsg = "bad username/password"
 
-	signUpWayKey = "confirm_by"
+	signUpWayKey      = "confirm_by"
 	signUpWayTelegram = "telegram"
-	signUpWayEmail = "email"
+	signUpWayEmail    = "email"
 
 	confirmationCodeKey = "confirmation_code"
-	contactKey = "contact"
+	contactKey          = "contact"
 )
 
 // POST

@@ -36,35 +36,35 @@ var routes = service.RouteMapping{
 		},
 	},
 	"/profile/auth/confirm": {
-		Description:   "manage confirmation for account creation",
+		Description: "manage confirmation for account creation",
 		MethodMapping: service.MethodMapping{
 			http.MethodPost: controllers.ProfileSignUpConfirm,
 		},
 	},
 	"/profile/recovery/settings": {
-		Description:   "manage recovering settings",
+		Description: "manage recovering settings",
 		MethodMapping: service.MethodMapping{
-			http.MethodPost: controllers.RecoverySet,
+			http.MethodPost:   controllers.RecoverySet,
 			http.MethodDelete: controllers.RecoverDelete,
-			http.MethodPut: controllers.RecoverUpdate,
-			http.MethodGet: controllers.RecoverTestGet,
+			http.MethodPut:    controllers.RecoverUpdate,
+			http.MethodGet:    controllers.RecoverTestGet,
 		},
 	},
 	"/profile/recovery": {
-		Description:   "recovery an account with lost password",
+		Description: "recovery an account with lost password",
 		MethodMapping: service.MethodMapping{
-			http.MethodGet: controllers.LostPassword,
+			http.MethodGet:  controllers.LostPassword,
 			http.MethodPost: controllers.LostPasswordConfirmCode,
 		},
 	},
 	"/profile/notification": {
-		Description:   "manage notification for profile",
+		Description: "manage notification for profile",
 		MethodMapping: service.MethodMapping{
 			http.MethodPost: controllers.NotificationActivate,
 		},
 	},
 	"/profile/echo-slam": {
-		Description:   "manage profile from echo-slam api",
+		Description: "manage profile from echo-slam api",
 		MethodMapping: service.MethodMapping{
 			http.MethodPost: controllers.SignUpFromEchoSlam,
 		},
@@ -86,12 +86,12 @@ var routes = service.RouteMapping{
 		MethodMapping: service.MethodMapping{
 			http.MethodPost:   controllers.Subscribe,
 			http.MethodGet:    controllers.SubsCheckExists,
-			http.MethodPut: controllers.SubRegenerate,
+			http.MethodPut:    controllers.SubRegenerate,
 			http.MethodDelete: controllers.SubResetAll,
 		},
 	},
 	"/subs/echo-slam": {
-		Description:   "manage subscription from echo-slam",
+		Description: "manage subscription from echo-slam",
 		MethodMapping: service.MethodMapping{
 			http.MethodPost: controllers.SubscribeFromEchoSlam,
 		},

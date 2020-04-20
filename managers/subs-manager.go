@@ -32,7 +32,7 @@ func sendNotificationQuotaReached(subDb models.Subscription, quota int, profile 
 		if handler, check := recoveryByMapping[profile.RecoverBy]; check {
 			if subDb.RequestCount == quota {
 
-				text := fmt.Sprintf("Your quota (%d) for the API `%s`" +
+				text := fmt.Sprintf("Your quota (%d) for the API `%s`"+
 					" is reached\n", quota, subDb.ApiName)
 
 				if err := handler.sendNotification(profile, text); err != nil {
@@ -50,9 +50,9 @@ func sendNotificationQuotaAlmostReached(subDb models.Subscription, quota int, pr
 		if handler, check := recoveryByMapping[profile.RecoverBy]; check {
 			step := float32(0.9)
 			// send notification if quota almost reached
-			if float32(subDb.RequestCount) >= (step * float32(quota)) && subDb.RequestCount < quota {
+			if float32(subDb.RequestCount) >= (step*float32(quota)) && subDb.RequestCount < quota {
 
-				text := fmt.Sprintf("Your quota (%d) for the API `%s`" +
+				text := fmt.Sprintf("Your quota (%d) for the API `%s`"+
 					" is about be reached\n", quota, subDb.ApiName)
 
 				if err := handler.sendNotification(profile, text); err != nil {
@@ -294,7 +294,6 @@ func SubsManagerUpdate(profileKey string, apiName string) (models.SubscriptionJs
 		return s, msg, err
 	}
 
-
 	subUpdated, msg, err := repositories.SubsRegenerateToken(profileKey, apiName, subsGenerateAccessToken())
 	if err != nil {
 		return s, msg, err
@@ -304,7 +303,6 @@ func SubsManagerUpdate(profileKey string, apiName string) (models.SubscriptionJs
 
 	return subJson, "token regenerated", nil
 }
-
 
 // warning: admin operation
 func SubsManagerResetRequestCount() (string, error) {

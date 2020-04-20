@@ -9,17 +9,17 @@ import (
 )
 
 const (
-	recoverByEmail = "email"
+	recoverByEmail    = "email"
 	recoverByTelegram = "telegram"
 )
 
 type RecoverByMapping struct {
-	test func(p models.Profile) error
-	sendCode func(p models.Profile, code string) error
+	test             func(p models.Profile) error
+	sendCode         func(p models.Profile, code string) error
 	sendNotification func(p models.Profile, text string) error
 }
 
-var recoveryByMapping = map[string]RecoverByMapping {
+var recoveryByMapping = map[string]RecoverByMapping{
 	"email": {
 		test:             repositories.RecoverySendTestMail,
 		sendCode:         repositories.RecoverySendCodeMail,
@@ -103,11 +103,11 @@ func RecoverySendCode(username string) (string, error) {
 	code := generateConfirmationCode()
 	expirationTime := getExpirationDuration()
 	if err := repositories.TempProfileCreate(models.TempProfile{
-				ConfirmationCode: code,
-				Username:         profileDb.Username,
-				PasswordEncrypt:  "",
-				ExpirationTime:   expirationTime,
-			}); err != nil {
+		ConfirmationCode: code,
+		Username:         profileDb.Username,
+		PasswordEncrypt:  "",
+		ExpirationTime:   expirationTime,
+	}); err != nil {
 		return "error creating temp profile", err
 	}
 
@@ -193,8 +193,5 @@ func RecoveryManagerTest(username string, password string) (string, error) {
 		return "error sending test", err
 	}
 
-
 	return "test sent", nil
 }
-
-

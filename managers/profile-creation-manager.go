@@ -15,9 +15,9 @@ const (
 	charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 )
 
-var confirmByMapping = map[string]func(contact string, tmpProfile models.TempProfile) error {
+var confirmByMapping = map[string]func(contact string, tmpProfile models.TempProfile) error{
 	"telegram": repositories.SendConfirmationTelegram,
-	"email": repositories.SendConfirmationMail,
+	"email":    repositories.SendConfirmationMail,
 }
 
 func generateConfirmationCode() string {
@@ -147,7 +147,7 @@ func ProfileManagerCreate(username string, password string, recoveryBy string, c
 	if err != nil {
 		return models.ProfileJson{}, "error while hashing password", err
 	}
-	
+
 	p := models.Profile{
 		ProfileKey:      models.NewProfileKey(),
 		Username:        username,

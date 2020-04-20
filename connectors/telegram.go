@@ -12,7 +12,7 @@ import (
 const (
 	apiUrlSendMessage = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s&parse_mode=%s"
 	ParseModeMarkdown = "Markdown"
-	ParseModeHTML = "HTML"
+	ParseModeHTML     = "HTML"
 )
 
 type SendMessageResponseError struct {
@@ -21,8 +21,8 @@ type SendMessageResponseError struct {
 }
 
 type TelegramConnector struct {
-	botToken          string
-	httpClient        *http.Client
+	botToken   string
+	httpClient *http.Client
 }
 
 func NewTelegramConnector(botToken string) (*TelegramConnector, error) {
@@ -32,8 +32,8 @@ func NewTelegramConnector(botToken string) (*TelegramConnector, error) {
 	}
 
 	return &TelegramConnector{
-		botToken:          botToken,
-		httpClient:        &http.Client{},
+		botToken:   botToken,
+		httpClient: &http.Client{},
 	}, nil
 }
 
