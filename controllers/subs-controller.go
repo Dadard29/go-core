@@ -74,7 +74,7 @@ func SubsCheckExists(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		s, message, err = managers.SubsManagerGetFromApiName(apiName, profileKey)
+		s, message, err = managers.SubsManagerGetFromApiName(apiName, profileKey, false)
 		if err != nil {
 			logger.Error(err.Error())
 			err := api.Api.BuildErrorResponse(http.StatusInternalServerError, message, w)

@@ -30,13 +30,14 @@ func SubsGetFromPkAndToken(subToken string) (models.Subscription, string, error)
 	}
 }
 
-func SubsGetFromApiName(apiName string, profileKey string) (models.Subscription, string, error) {
+func SubsGetFromApiName(apiName string, profileKey string, fromEchoSlam bool) (models.Subscription, string, error) {
 	var subDb models.Subscription
 	api.Api.Database.Orm.Where(&models.Subscription{
 		ProfileKey: profileKey,
 		ApiName:    apiName,
+		FromEchoSlam: fromEchoSlam,
 	}).First(&subDb)
-	if subDb.ApiName == apiName && subDb.ProfileKey == profileKey {
+	if subDb.ApiName == apiName && subDb.ProfileKey == profileKey && subDb.FromEchoSlam ==  fromEchoSlam {
 		return subDb, "sub checked", nil
 	} else {
 		msg := "no sub with for this user and the api " + apiName
@@ -80,7 +81,7 @@ func SubsDelete(profileKey string, apiName string) (models.Subscription, string,
 		return models.Subscription{}, msg, errors.New(msg)
 	}
 
-	sDelete, msg, err := SubsGetFromApiName(apiName, profileKey)
+	sDelete, msg, err := SubsGetFromApiName(apiName, profileKey, false)
 	if err != nil {
 		return models.Subscription{}, msg, err
 	}
@@ -104,7 +105,7 @@ func SubsRegenerateToken(profileKey string, apiName string, newAccessToken strin
 		return models.Subscription{}, msg, errors.New(msg)
 	}
 
-	sUpdated, msg, err := SubsGetFromApiName(apiName, profileKey)
+	sUpdated, msg, err := SubsGetFromApiName(apiName, profileKey, false)
 	if err != nil {
 		return models.Subscription{}, msg, err
 	}

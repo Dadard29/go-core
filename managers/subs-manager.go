@@ -144,7 +144,7 @@ func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, 
 	return models.NewSubscriptionJson(*newSubDb, a, quota), "sub checked", nil
 }
 
-func SubsManagerGetFromApiName(apiName string, profileKey string) (models.SubscriptionJson, string, error) {
+func SubsManagerGetFromApiName(apiName string, profileKey string, fromEchoSlam bool) (models.SubscriptionJson, string, error) {
 	var s models.SubscriptionJson
 
 	a, msg, err := repositories.ApiGet(apiName)
@@ -162,7 +162,7 @@ func SubsManagerGetFromApiName(apiName string, profileKey string) (models.Subscr
 		return s, "error getting quota", err
 	}
 
-	subDb, msg, err := repositories.SubsGetFromApiName(apiName, profileKey)
+	subDb, msg, err := repositories.SubsGetFromApiName(apiName, profileKey, fromEchoSlam)
 	if err != nil {
 		return s, msg, err
 	}
