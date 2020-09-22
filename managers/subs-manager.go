@@ -49,8 +49,8 @@ func sendNotificationQuotaAlmostReached(subDb models.Subscription, quota int, pr
 	if profile.BeNotified {
 		if handler, check := recoveryByMapping[profile.RecoverBy]; check {
 			step := float32(0.9)
-			// send notification if quota almost reached
-			if float32(subDb.RequestCount) >= (step*float32(quota)) && subDb.RequestCount < quota {
+			// send notification if quota almost reached (90% exactly of maximum quota)
+			if float32(subDb.RequestCount) == (step*float32(quota)) && subDb.RequestCount < quota {
 
 				text := fmt.Sprintf("Your quota (%d) for the API `%s`"+
 					" is about be reached\n", quota, subDb.ApiName)
@@ -134,13 +134,16 @@ func SubsManagerGetFromToken(subToken string) (models.SubscriptionJson, string, 
 		return s, msg, err
 	}
 
-	if err := sendNotificationQuotaAlmostReached(*newSubDb, quota, profile); err != nil {
-		logger.Warning(err.Error())
-	}
+	// send notif asynchronously to avoid request blocking
+	go func() {
+		if err := sendNotificationQuotaAlmostReached(*newSubDb, quota, profile); err != nil {
+			logger.Warning(err.Error())
+		}
 
-	if err := sendNotificationQuotaReached(*newSubDb, quota, profile); err != nil {
-		logger.Warning(err.Error())
-	}
+		if err := sendNotificationQuotaReached(*newSubDb, quota, profile); err != nil {
+			logger.Warning(err.Error())
+		}
+	}()
 
 	return models.NewSubscriptionJson(*newSubDb, a, quota), "sub checked", nil
 }
