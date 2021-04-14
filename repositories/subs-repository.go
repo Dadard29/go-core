@@ -49,6 +49,7 @@ func SubsListFromProfile(p models.Profile) ([]models.Subscription, string, error
 	var s []models.Subscription
 	api.Api.Database.Orm.Find(&s, &models.Subscription{
 		ProfileKey: p.ProfileKey,
+		FromEchoSlam: false,
 	})
 
 	return s, "subs listed", nil
